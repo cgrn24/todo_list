@@ -62,7 +62,7 @@ export function Todolist(props: PropsType) {
         <button onClick={addTaskHandler}>+</button>
       </div>
       <ul>
-        {props.tasks.map((el) => {
+        {filteredTasks.map((el) => {
           return (
             <li key={el.id}>
               <button onClick={() => removeTaskHandler(el.id)}>X</button>
