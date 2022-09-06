@@ -13,6 +13,15 @@ function App() {
     { id: v1(), title: 'ReactJS2', isDone: false },
   ])
 
+  const changeCheckBoxStatus = (taskId: string, newIsDoneValue: boolean) => {
+    // let currentTask = tasks1.find((el) => el.id === taskId)
+    // if (currentTask) {
+    //   currentTask.isDone = newIsDoneValue
+    //   setTask1([...tasks1])
+    // }
+    setTask1(tasks1.map((el) => (el.id === taskId ? { ...el, isDone: newIsDoneValue } : el)))
+  }
+
   const addTask = (inputValue: string) => {
     const newTask = { id: v1(), title: inputValue, isDone: false }
     setTask1([newTask, ...tasks1])
@@ -38,12 +47,7 @@ function App() {
 
   return (
     <div className='App'>
-      <Todolist
-        title='What to learn'
-        tasks={tasks1}
-        removeTask={removeTask}
-        addTask={addTask}
-      />
+      <Todolist title='What to learn' tasks={tasks1} removeTask={removeTask} addTask={addTask} changeCheckboxStatus={changeCheckBoxStatus} />
     </div>
   )
 }
