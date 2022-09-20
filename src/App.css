@@ -5,4 +5,24 @@
 
 .App > div {
   margin-right: 50px;
+
+}
+.isDone {
+  color: hotpink;
+  font-weight: bold;
+  text-decoration: line-through;
+}
+.btn {
+  margin: 0 3px;
+}
+.btn-active {
+  background-color: hotpink;
+  color: white;
+  font-weight: bold;
+  border: 2px solid hotpink;
+  border-radius: 3px;
+}
+.error {
+  border: 2px solid hotpink;
+  outline: none;
 }
