@@ -1,4 +1,4 @@
-.App {
+/* .App {
   padding: 30px;
   display: flex;
 }
@@ -6,13 +6,13 @@
 .App > div {
   margin-right: 50px;
 
-}
+} */
 .isDone {
   color: hotpink;
   font-weight: bold;
   text-decoration: line-through;
 }
-.btn {
+/* .btn {
   margin: 0 3px;
 }
 .btn-active {
@@ -25,4 +25,4 @@
 .error {
   border: 2px solid hotpink;
   outline: none;
-}
+} */
