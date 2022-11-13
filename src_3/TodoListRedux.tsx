@@ -1,6 +1,6 @@
 import { Button, Checkbox, IconButton } from '@material-ui/core'
 import { Delete } from '@material-ui/icons'
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, memo, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { AddItemForm } from './AddItemForm'
@@ -9,6 +9,7 @@ import { EditableSpan } from './EditableSpan'
 import { addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC } from './reducers/tasks-reducer'
 import { ChangeTodoListFilterAC, ChangeTodoLisTitleAC, RemoveTodoListAC } from './reducers/todlist-reducer'
 import { AppRootStateType } from './state/store'
+import { Task } from './Task'
 
 export type TaskType = {
   id: string
@@ -22,25 +23,32 @@ export type TodoListReduxPropsType = {
   filter: FilterValuesType
 }
 
-export const TodoListRedux = ({ todoListId, title, filter }: TodoListReduxPropsType) => {
+export const TodoListRedux = memo(({ todoListId, title, filter }: TodoListReduxPropsType) => {
+  console.log('Todolist Render')
+
   let tasks = useSelector<AppRootStateType, Array<TaskType>>((state) => state.tasks[todoListId])
   const dispatch = useDispatch()
 
-  const removeTodolist = () => {
+  const removeTodolist = useCallback(() => {
     dispatch(RemoveTodoListAC(todoListId))
-  }
+  }, [dispatch])
 
-  const changeTodolistTitle = (title: string) => {
-    dispatch(ChangeTodoLisTitleAC(todoListId, title))
-  }
+  const changeTodolistTitle = useCallback(
+    (title: string) => {
+      dispatch(ChangeTodoLisTitleAC(todoListId, title))
+    },
+    [dispatch]
+  )
 
-  const addTask = (title: string) => {
-    dispatch(addTaskAC(title, todoListId))
-  }
-
-  const onAllClickHandler = () => dispatch(ChangeTodoListFilterAC('all', todoListId))
-  const onActiveClickHandler = () => dispatch(ChangeTodoListFilterAC('active', todoListId))
-  const onCompletedClickHandler = () => dispatch(ChangeTodoListFilterAC('completed', todoListId))
+  const addTask = useCallback(
+    (title: string) => {
+      dispatch(addTaskAC(title, todoListId))
+    },
+    [dispatch]
+  )
+  const onAllClickHandler = useCallback(() => dispatch(ChangeTodoListFilterAC('all', todoListId)), [])
+  const onActiveClickHandler = useCallback(() => dispatch(ChangeTodoListFilterAC('active', todoListId)), [])
+  const onCompletedClickHandler = useCallback(() => dispatch(ChangeTodoListFilterAC('completed', todoListId)), [])
 
   if (filter === 'active') {
     tasks = tasks.filter((t) => !t.isDone)
@@ -52,7 +60,6 @@ export const TodoListRedux = ({ todoListId, title, filter }: TodoListReduxPropsT
   return (
     <div>
       <h3>
-        {' '}
         <EditableSpan title={title} changeTitle={changeTodolistTitle} />
         <IconButton onClick={removeTodolist}>
           <Delete />
@@ -61,6 +68,7 @@ export const TodoListRedux = ({ todoListId, title, filter }: TodoListReduxPropsT
       <AddItemForm addItem={addTask} />
       <div>
         {tasks.map((t) => {
+          return <Task />
           const onClickHandler = () => dispatch(removeTaskAC(t.id, todoListId))
           const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
             let newIsDoneValue = e.currentTarget.checked
@@ -69,17 +77,6 @@ export const TodoListRedux = ({ todoListId, title, filter }: TodoListReduxPropsT
           const onTitleChangeHandler = (newValue: string) => {
             dispatch(changeTaskTitleAC(t.id, newValue, todoListId))
           }
-
-          return (
-            <div key={t.id} className={t.isDone ? 'is-done' : ''}>
-              <Checkbox checked={t.isDone} color='primary' onChange={onChangeHandler} />
-
-              <EditableSpan title={t.title} changeTitle={onTitleChangeHandler} />
-              <IconButton onClick={onClickHandler}>
-                <Delete />
-              </IconButton>
-            </div>
-          )
         })}
       </div>
       <div>
@@ -95,4 +92,4 @@ export const TodoListRedux = ({ todoListId, title, filter }: TodoListReduxPropsT
       </div>
     </div>
   )
-}
+})

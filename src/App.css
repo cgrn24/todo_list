@@ -1,28 +1,26 @@
-/* .App {
+/*
+.App {
   padding: 30px;
   display: flex;
 }
 
 .App > div {
   margin-right: 50px;
+}
 
-} */
-.isDone {
-  color: hotpink;
-  font-weight: bold;
-  text-decoration: line-through;
-}
-/* .btn {
-  margin: 0 3px;
-}
-.btn-active {
-  background-color: hotpink;
-  color: white;
-  font-weight: bold;
-  border: 2px solid hotpink;
-  border-radius: 3px;
-}
 .error {
-  border: 2px solid hotpink;
-  outline: none;
-} */
+  border: red 1px solid;
+}
+
+.error-message {
+  color: red;
+}
+
+.active-filter {
+  background-color: aquamarine;
+}
+
+.is-done {
+  opacity: 0.5;
+}
+*/
