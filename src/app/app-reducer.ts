@@ -1,31 +1,37 @@
+const initialState: InitialStateType = {
+  isInitialized: false,
+  status: 'idle',
+  error: null,
+}
+
+export const appReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
+  switch (action.type) {
+    case 'APP/SET-STATUS':
+      return { ...state, status: action.status }
+    case 'APP/SET-ERROR':
+      return { ...state, error: action.error }
+    case 'APP/SET-INITIALIZED':
+      return { ...state, isInitialized: action.value }
+    default:
+      return { ...state }
+  }
+}
+
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
-
-
-const initialState = {
-    status: "idle" as RequestStatusType,
-    error: null as null | string,
+export type InitialStateType = {
+  // происходит ли сейчас взаимодействие с сервером
+  status: RequestStatusType
+  // если ошибка какая-то глобальная произойдёт - мы запишем текст ошибки сюда
+  error: string | null
+  isInitialized: boolean
 }
 
-type InitialStateType = typeof initialState
+export const setAppErrorAC = (error: string | null) => ({ type: 'APP/SET-ERROR', error } as const)
+export const setAppStatusAC = (status: RequestStatusType) => ({ type: 'APP/SET-STATUS', status } as const)
+export const setInitializeAC = (value: boolean) => ({ type: 'APP/SET-INITIALIZED', value } as const)
 
-export const appReducer = (state: InitialStateType = initialState, action: AppActionsType): InitialStateType => {
-    switch (action.type) {
-        case 'APP/SET-STATUS':
-            return {...state, status: action.status}
+export type SetAppErrorActionType = ReturnType<typeof setAppErrorAC>
+export type SetAppStatusActionType = ReturnType<typeof setAppStatusAC>
+export type SetInitializedActionType = ReturnType<typeof setInitializeAC>
 
-        case 'APP/SET-ERROR':
-            return {...state, error: action.error}
-        default:
-            return state
-    }
-}
-
-export const setStatus = (status: RequestStatusType) => ({type: 'APP/SET-STATUS', status} as const)
-export const setError = (error: string | null) => ({type: 'APP/SET-ERROR', error} as const)
-
-
-export type SetStatusType = ReturnType<typeof setStatus>
-export type SetErrorType = ReturnType<typeof setError>
-
-export type AppActionsType = SetStatusType | SetErrorType
-
+type ActionsType = SetAppErrorActionType | SetAppStatusActionType | SetInitializedActionType
