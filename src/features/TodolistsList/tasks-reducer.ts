@@ -18,10 +18,7 @@ export const fetchTasksTC = createAsyncThunk('tasks/fetchTasks', (todolistId: st
   })
 })
 export const removeTaskTC = createAsyncThunk('tasks/removeTask', (param: { taskId: string; todolistId: string }, thunkAPI) => {
-  return todolistsAPI.deleteTask(param.todolistId, param.taskId).then((res) => {
-    const action = removeTaskAC({ taskId: param.taskId, todolistId: param.todolistId })
-    thunkAPI.dispatch(action)
-  })
+  return todolistsAPI.deleteTask(param.todolistId, param.taskId).then((res) => ({ taskId: param.taskId, todolistId: param.todolistId }))
 })
 
 const slice = createSlice({
@@ -64,12 +61,19 @@ const slice = createSlice({
     builder.addCase(fetchTasksTC.fulfilled, (state, action) => {
       state[action.payload.todolistId] = action.payload.tasks
     })
+    builder.addCase(removeTaskTC.fulfilled, (state, action) => {
+      const tasks = state[action.payload.todolistId]
+      const index = tasks.findIndex((t) => t.id === action.payload.taskId)
+      if (index > -1) {
+        tasks.splice(index, 1)
+      }
+    })
   },
 })
 
 export const tasksReducer = slice.reducer
 
-export const { removeTaskAC, addTaskAC, updateTaskAC } = slice.actions
+export const { addTaskAC, updateTaskAC } = slice.actions
 
 export const _tasksReducer = (state: TasksStateType = initialState, action: any): TasksStateType => {
   switch (action.type) {
