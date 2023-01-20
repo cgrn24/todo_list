@@ -65,21 +65,3 @@ const slice = createSlice({
 
 export const authReducer = slice.reducer
 export const { setIsLoggedInAC } = slice.actions
-
-export const meTC = () => async (dispatch: Dispatch) => {
-  dispatch(setAppStatusAC({ status: 'loading' }))
-  try {
-    const res = await authAPI.me()
-    if (res.data.resultCode === 0) {
-      dispatch(setIsLoggedInAC({ value: true }))
-      dispatch(setAppStatusAC({ status: 'succeeded' }))
-    } else {
-      handleServerAppError(res.data, dispatch)
-    }
-  } catch (e) {
-    //@ts-ignore
-    handleServerNetworkError(e, dispatch)
-  } finally {
-    dispatch(setInitializeAC({ value: true }))
-  }
-}
