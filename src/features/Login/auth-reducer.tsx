@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AxiosError } from 'axios'
 import { Dispatch } from 'redux'
 import { authAPI, FieldErrorType, LoginParamsType, Result_code } from '../../api/todolists-api'
-import { setAppStatusAC, setInitializeAC } from '../../app/app-reducer'
+import { setAppStatusAC } from '../../app/app-reducer'
 import { handleServerAppError, handleServerNetworkError } from '../../utils/error-utils'
 
 export const loginTC = createAsyncThunk<undefined, LoginParamsType, { rejectValue: { errors: Array<string>; fieldsErrors?: Array<FieldErrorType> } }>(
