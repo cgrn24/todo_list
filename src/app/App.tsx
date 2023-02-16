@@ -1,8 +1,6 @@
-import React, { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import './App.css'
 import { TodolistsList } from '../features/TodolistsList/TodolistsList'
-import { useAppDispatch, useAppSelector } from './store'
-import { meTC, RequestStatusType } from './app-reducer'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
@@ -13,21 +11,34 @@ import LinearProgress from '@mui/material/LinearProgress'
 import { Menu } from '@mui/icons-material'
 import { ErrorSnackbar } from '../components/ErrorSnackbar/ErrorSnackbar'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { Login } from '../features/Login/Login'
-import { loginTC, logoutTC } from '../features/Login/auth-reducer'
+import { Login } from '../features/Auth/Login'
 import { CircularProgress } from '@mui/material'
+import { useSelector } from 'react-redux'
+import { selectIsInitialized, selectStatus } from '../features/Application/selectors'
+import { authActions, authSelectors } from '../features/Auth'
+import { useActions } from '../utils/redux-utils'
+import { appActions } from '../features/Application'
 
-function App() {
-  const dispatch = useAppDispatch()
-  const status = useAppSelector<RequestStatusType>((state) => state.app.status)
-  const isInitialized = useAppSelector<boolean>((state) => state.app.isInitialized)
-  const isLoggedIn = useAppSelector<boolean>((state) => state.auth.isLoggedIn)
-  const logOut = () => {
-    dispatch(logoutTC())
-  }
+type PropsType = {
+  demo?: boolean
+}
+
+const App = ({ demo = false }: PropsType) => {
+  const status = useSelector(selectStatus)
+  const isInitialized = useSelector(selectIsInitialized)
+  const isLoggedIn = useSelector(authSelectors.selectIsLoggedIn)
+
+  const { logout } = useActions(authActions)
+  const { initializeApp } = useActions(appActions)
 
   useEffect(() => {
-    dispatch(meTC())
+    if (!demo) {
+      initializeApp()
+    }
+  }, [])
+
+  const logoutHandler = useCallback(() => {
+    logout()
   }, [])
 
   if (!isInitialized) {
@@ -48,7 +59,7 @@ function App() {
           </IconButton>
           <Typography variant='h6'>News</Typography>
           {isLoggedIn && (
-            <Button color='inherit' onClick={logOut}>
+            <Button color='inherit' onClick={logoutHandler}>
               Logout
             </Button>
           )}
