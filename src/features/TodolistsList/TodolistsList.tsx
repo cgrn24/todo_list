@@ -11,11 +11,7 @@ import { useActions, useAppDispatch } from '../../utils/redux-utils'
 import { Grid } from '@mui/material'
 import { Navigate } from 'react-router-dom'
 
-type PropsType = {
-  demo?: boolean
-}
-
-export const TodolistsList: React.FC<PropsType> = ({ demo = false }) => {
+export const TodolistsList = () => {
   const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>((state) => state.todolists)
   const tasks = useSelector<AppRootStateType, TasksStateType>((state) => state.tasks)
   const isLoggedIn = useSelector(selectIsLoggedIn)
@@ -41,7 +37,7 @@ export const TodolistsList: React.FC<PropsType> = ({ demo = false }) => {
   }, [])
 
   useEffect(() => {
-    if (demo || !isLoggedIn) {
+    if (!isLoggedIn) {
       return
     }
     fetchTodolistsTC()
@@ -63,7 +59,7 @@ export const TodolistsList: React.FC<PropsType> = ({ demo = false }) => {
           return (
             <Grid item key={tl.id}>
               <div style={{ width: '300px' }}>
-                <Todolist todolist={tl} tasks={allTodolistTasks} demo={demo} />
+                <Todolist todolist={tl} tasks={allTodolistTasks} />
               </div>
             </Grid>
           )

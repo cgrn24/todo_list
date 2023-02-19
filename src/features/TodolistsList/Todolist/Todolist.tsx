@@ -12,19 +12,15 @@ import { Delete } from '@mui/icons-material'
 type PropsType = {
   todolist: TodolistDomainType
   tasks: Array<TaskType>
-  demo?: boolean
 }
 
-export const Todolist = React.memo(function ({ demo = false, ...props }: PropsType) {
+export const Todolist = React.memo(function ({ ...props }: PropsType) {
   const { fetchTasks } = useActions(tasksActions)
   const { changeTodolistFilter, removeTodolistTC, changeTodolistTitleTC } = useActions(todolistsActions)
 
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    if (demo) {
-      return
-    }
     fetchTasks(props.todolist.id)
   }, [])
 

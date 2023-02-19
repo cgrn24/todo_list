@@ -18,11 +18,7 @@ import { authActions, authSelectors, Login } from '../features/Auth'
 import { useActions } from '../utils/redux-utils'
 import { appActions } from '../features/Application'
 
-type PropsType = {
-  demo?: boolean
-}
-
-const App = ({ demo = false }: PropsType) => {
+const App = () => {
   const status = useSelector(selectStatus)
   const isInitialized = useSelector(selectIsInitialized)
   const isLoggedIn = useSelector(authSelectors.selectIsLoggedIn)
@@ -31,7 +27,7 @@ const App = ({ demo = false }: PropsType) => {
   const { initializeApp } = useActions(appActions)
 
   useEffect(() => {
-    if (!demo) {
+    if (!isInitialized) {
       initializeApp()
     }
   }, [])
