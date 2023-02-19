@@ -40,7 +40,9 @@ export const TodolistsList = () => {
     if (!isLoggedIn) {
       return
     }
-    fetchTodolistsTC()
+    if (!todolists.length) {
+      fetchTodolistsTC()
+    }
   }, [])
 
   if (!isLoggedIn) {

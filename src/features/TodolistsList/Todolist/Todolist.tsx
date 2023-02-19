@@ -21,7 +21,9 @@ export const Todolist = React.memo(function ({ ...props }: PropsType) {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    fetchTasks(props.todolist.id)
+    if (!props.tasks.length) {
+      fetchTasks(props.todolist.id)
+    }
   }, [])
 
   const addTaskCallback = useCallback(
