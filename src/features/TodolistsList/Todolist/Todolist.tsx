@@ -6,8 +6,8 @@ import { FilterValuesType, TodolistDomainType } from '../todolists-reducer'
 import { tasksActions, todolistsActions } from '../index'
 import { TaskStatuses, TaskType } from '../../../api/types'
 import { useActions, useAppDispatch } from '../../../utils/redux-utils'
-import { Button, IconButton, Paper, PropTypes } from '@mui/material'
-import { Delete } from '@mui/icons-material'
+import { Button, IconButton, Paper } from '@mui/material'
+import ClearIcon from '@mui/icons-material/Clear'
 
 type PropsType = {
   todolist: TodolistDomainType
@@ -89,7 +89,7 @@ export const Todolist = React.memo(function ({ ...props }: PropsType) {
         disabled={props.todolist.entityStatus === 'loading'}
         style={{ position: 'absolute', right: '5px', top: '5px' }}
       >
-        <Delete fontSize={'small'} />
+        <ClearIcon fontSize={'small'} />
       </IconButton>
       <h3>
         <EditableSpan value={props.todolist.title} onChange={changeTodolistTitle} />

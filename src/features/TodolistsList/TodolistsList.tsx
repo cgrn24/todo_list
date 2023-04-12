@@ -21,7 +21,7 @@ export const TodolistsList = () => {
   const { fetchTodolistsTC, addTodolistTC } = useActions(todolistsActions)
 
   const addTodolistCallback = useCallback(async (title: string, helper: AddItemFormSubmitHelperType) => {
-    let thunk = todolistsActions.addTodolistTC(title)
+    let thunk = addTodolistTC(title)
     const resultAction = await dispatch(thunk)
 
     if (todolistsActions.addTodolistTC.rejected.match(resultAction)) {
@@ -54,7 +54,7 @@ export const TodolistsList = () => {
       <Grid container style={{ padding: '20px' }}>
         <AddItemForm addItem={addTodolistCallback} />
       </Grid>
-      <Grid container spacing={3} style={{ flexWrap: 'nowrap', overflowX: 'scroll' }}>
+      <Grid container spacing={7}>
         {todolists.map((tl) => {
           let allTodolistTasks = tasks[tl.id]
 

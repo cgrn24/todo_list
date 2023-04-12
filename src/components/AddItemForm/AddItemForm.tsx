@@ -2,6 +2,7 @@ import React, { ChangeEvent, KeyboardEvent, useState } from 'react'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import { AddBox } from '@mui/icons-material'
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 
 export type AddItemFormSubmitHelperType = { setError: (error: string) => void; setTitle: (title: string) => void }
 type AddItemFormPropsType = {
@@ -29,7 +30,7 @@ export const AddItemForm = React.memo(function ({ addItem, disabled = false }: A
     if (error !== null) {
       setError(null)
     }
-    if (e.charCode === 13) {
+    if (e.code === 'Enter') {
       addItemHandler()
     }
   }
@@ -46,8 +47,8 @@ export const AddItemForm = React.memo(function ({ addItem, disabled = false }: A
         label='Title'
         helperText={error}
       />
-      <IconButton color='primary' onClick={addItemHandler} disabled={disabled} style={{ marginLeft: '5px' }}>
-        <AddBox />
+      <IconButton color='primary' onClick={addItemHandler} disabled={disabled} style={{ marginLeft: '5px', marginTop: '7px' }}>
+        <AddCircleOutlineIcon />
       </IconButton>
     </div>
   )
