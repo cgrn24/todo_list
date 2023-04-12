@@ -49,10 +49,12 @@ const App = () => {
       <ErrorSnackbar />
       <AppBar position='static'>
         <Toolbar>
-          <IconButton edge='start' color='inherit' aria-label='menu'>
+          <IconButton size='large' edge='start' color='inherit' sx={{ mr: 2 }}>
             <Menu />
           </IconButton>
-          <Typography variant='h6'>News</Typography>
+          <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
+            Task manager
+          </Typography>
           {isLoggedIn && (
             <Button color='inherit' onClick={logoutHandler}>
               Logout
