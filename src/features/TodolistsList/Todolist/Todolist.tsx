@@ -7,7 +7,7 @@ import { tasksActions, todolistsActions } from '../index'
 import { TaskStatuses, TaskType } from '../../../common/types/types'
 import { useActions } from '../../../common/utils/redux-utils'
 import { useAppDispatch } from '../../../common/hooks/useAppDispatch'
-import { Button, IconButton, Paper } from '@mui/material'
+import { Button, ButtonGroup, IconButton, Paper } from '@mui/material'
 import ClearIcon from '@mui/icons-material/Clear'
 
 type PropsType = {
@@ -74,9 +74,16 @@ export const Todolist = React.memo(function ({ ...props }: PropsType) {
     tasksForTodolist = props.tasks.filter((t) => t.status === TaskStatuses.Completed)
   }
 
-  const renderFilterButton = (buttonFilter: FilterValuesType, color: 'inherit' | 'primary' | 'secondary', text: string) => {
+  // const renderFilterButton = (buttonFilter: FilterValuesType, color: 'inherit' | 'primary' | 'secondary', text: string) => {
+  //   return (
+  //     <Button variant={props.todolist.filter === buttonFilter ? 'outlined' : 'text'} onClick={() => onFilterButtonClickHandler(buttonFilter)} color={color}>
+  //       {text}
+  //     </Button>
+  //   )
+  // }
+  const renderFilterButton = (buttonFilter: FilterValuesType, text: string) => {
     return (
-      <Button variant={props.todolist.filter === buttonFilter ? 'outlined' : 'text'} onClick={() => onFilterButtonClickHandler(buttonFilter)} color={color}>
+      <Button color={props.todolist.filter === buttonFilter ? 'secondary' : 'primary'} onClick={() => onFilterButtonClickHandler(buttonFilter)}>
         {text}
       </Button>
     )
@@ -103,9 +110,11 @@ export const Todolist = React.memo(function ({ ...props }: PropsType) {
         {!tasksForTodolist.length && <div style={{ padding: '10px', color: 'grey' }}>No task</div>}
       </div>
       <div style={{ paddingTop: '10px' }}>
-        {renderFilterButton('all', 'inherit', 'All')}
-        {renderFilterButton('active', 'primary', 'Active')}
-        {renderFilterButton('completed', 'secondary', 'Completed')}
+        <ButtonGroup variant='contained' aria-label='outlined primary button group'>
+          {renderFilterButton('all', 'All')}
+          {renderFilterButton('active', 'Active')}
+          {renderFilterButton('completed', 'Completed')}
+        </ButtonGroup>
       </div>
     </Paper>
   )

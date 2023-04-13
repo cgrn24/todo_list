@@ -4,7 +4,8 @@ import { tasksActions } from '../../index'
 import { TaskStatuses, TaskType } from '../../../../common/types/types'
 import { useActions } from '../../../../common/utils/redux-utils'
 import { Checkbox, IconButton } from '@mui/material'
-import { Delete } from '@mui/icons-material'
+
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
 
 type TaskPropsType = {
   task: TaskType
@@ -43,8 +44,8 @@ export const Task = React.memo((props: TaskPropsType) => {
       <Checkbox checked={props.task.status === TaskStatuses.Completed} color='secondary' onChange={onChangeHandler} />
 
       <EditableSpan value={props.task.title} onChange={onTitleChangeHandler} />
-      <IconButton size={'small'} onClick={onClickHandler} style={{ position: 'absolute', top: '2px', right: '2px' }}>
-        <Delete fontSize={'small'} />
+      <IconButton size={'small'} onClick={onClickHandler} style={{ position: 'absolute', top: '2px', right: '5px' }}>
+        <RemoveCircleIcon fontSize={'small'} />
       </IconButton>
     </div>
   )

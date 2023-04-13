@@ -75,7 +75,7 @@ const App = () => {
           </Toolbar>
           {status === 'loading' && <LinearProgress />}
         </AppBar>
-        <Container fixed>
+        <Container fixed maxWidth={false} style={{ maxWidth: '1305px' }}>
           <Routes>
             <Route path={'/'} element={<TodolistsList />} />
             <Route path={'/login'} element={<Login />} />
