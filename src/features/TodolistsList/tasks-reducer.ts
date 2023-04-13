@@ -1,10 +1,11 @@
-import { todolistsAPI } from '../../api/todolists-api'
+import { todolistsAPI } from './todolistsAPI'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { appActions } from '../CommonActions/App'
-import { handleAsyncServerAppError, handleAsyncServerNetworkError } from '../../utils/error-utils'
+import { appActions } from '../../app/app-actions'
+import { handleAsyncServerAppError, handleAsyncServerNetworkError } from '../../common/utils/error-utils'
 import { asyncActions as asyncTodolistsActions } from './todolists-reducer'
-import { AppRootStateType, ThunkError } from '../../utils/types'
-import { TaskPriorities, TaskStatuses, TaskType, UpdateTaskModelType } from '../../api/types'
+import { AppRootStateType, ThunkError } from '../../common/utils/types'
+import { TaskPriorities, TaskStatuses, TaskType, UpdateTaskModelType } from '../../common/types/types'
+import { clearTasksAndTodolists } from 'common/actions/common-actions'
 
 const initialState: TasksStateType = {}
 
@@ -120,6 +121,9 @@ export const slice = createSlice({
         if (index > -1) {
           tasks[index] = { ...tasks[index], ...action.payload.model }
         }
+      })
+      .addCase(clearTasksAndTodolists, () => {
+        return {}
       })
   },
 })

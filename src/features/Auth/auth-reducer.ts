@@ -1,9 +1,10 @@
 import { AxiosError } from 'axios'
-import { authAPI } from '../../api/todolists-api'
-import { handleAsyncServerAppError, handleAsyncServerNetworkError } from '../../utils/error-utils'
+import { authAPI } from './authAPI'
+import { handleAsyncServerAppError, handleAsyncServerNetworkError } from '../../common/utils/error-utils'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { FieldErrorType, LoginParamsType } from '../../api/types'
-import { appActions } from '../CommonActions/App'
+import { FieldErrorType, LoginParamsType } from '../../common/types/types'
+import { appActions } from '../../app/app-actions'
+import { clearTasksAndTodolists } from 'common/actions/common-actions'
 
 const { setAppStatus } = appActions
 
@@ -31,6 +32,7 @@ export const logout = createAsyncThunk('auth/logout', async (param, thunkAPI) =>
     const res = await authAPI.logout()
     if (res.data.resultCode === 0) {
       thunkAPI.dispatch(setAppStatus({ status: 'succeeded' }))
+      thunkAPI.dispatch(clearTasksAndTodolists())
       return
     } else {
       return handleAsyncServerAppError(res.data, thunkAPI)

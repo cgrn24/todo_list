@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { login } from './auth-reducer'
 import { selectIsLoggedIn } from './selectors'
 import { authActions } from './index'
-import { useAppDispatch } from '../../utils/redux-utils'
+import { useAppDispatch } from '../../common/hooks/useAppDispatch'
 import { Navigate } from 'react-router-dom'
 import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField } from '@mui/material'
 
