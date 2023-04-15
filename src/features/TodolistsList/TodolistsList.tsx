@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { TodolistDomainType } from './todolists-reducer'
-import { TasksStateType } from './tasks-reducer'
 import { AddItemForm, AddItemFormSubmitHelperType } from '../../common/components/AddItemForm/AddItemForm'
 import { Todolist } from './Todolist/Todolist'
 import { selectIsLoggedIn } from '../Auth/selectors'
@@ -10,11 +8,11 @@ import { useActions } from '../../common/hooks/useActions'
 import { useAppDispatch } from '../../common/hooks/useAppDispatch'
 import { Grid } from '@mui/material'
 import { Navigate } from 'react-router-dom'
-import { AppRootStateType } from 'app/store'
+import { selectTasks, selectTodos } from './selectors'
 
 export const TodolistsList = () => {
-  const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>((state) => state.todolists)
-  const tasks = useSelector<AppRootStateType, TasksStateType>((state) => state.tasks)
+  const todolists = useSelector(selectTodos)
+  const tasks = useSelector(selectTasks)
   const isLoggedIn = useSelector(selectIsLoggedIn)
 
   const dispatch = useAppDispatch()
