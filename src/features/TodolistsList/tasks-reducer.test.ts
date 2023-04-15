@@ -1,6 +1,6 @@
 import { slice, TasksStateType, asyncActions } from './tasks-reducer'
 import { asyncActions as todolistsAsyncActions } from './todolists-reducer'
-import { TaskPriorities, TaskStatuses } from '../../common/types/types'
+import { TaskPriorities, TaskStatuses } from '../../common/enums/TaskStatuses'
 
 const { reducer: tasksReducer } = slice
 const { addTodolistTC, fetchTodolistsTC, removeTodolistTC } = todolistsAsyncActions

@@ -4,7 +4,8 @@ import { EditableSpan } from '../../../common/components/EditableSpan/EditableSp
 import { Task } from './Task/Task'
 import { FilterValuesType, TodolistDomainType } from '../todolists-reducer'
 import { tasksActions, todolistsActions } from '../index'
-import { TaskStatuses, TaskType } from '../../../common/types/types'
+import { TaskType } from '../../../common/types/types'
+import { TaskStatuses } from '../../../common/enums/TaskStatuses'
 import { useActions } from '../../../common/utils/redux-utils'
 import { useAppDispatch } from '../../../common/hooks/useAppDispatch'
 import { Button, ButtonGroup, IconButton, Paper } from '@mui/material'
@@ -74,13 +75,6 @@ export const Todolist = React.memo(function ({ ...props }: PropsType) {
     tasksForTodolist = props.tasks.filter((t) => t.status === TaskStatuses.Completed)
   }
 
-  // const renderFilterButton = (buttonFilter: FilterValuesType, color: 'inherit' | 'primary' | 'secondary', text: string) => {
-  //   return (
-  //     <Button variant={props.todolist.filter === buttonFilter ? 'outlined' : 'text'} onClick={() => onFilterButtonClickHandler(buttonFilter)} color={color}>
-  //       {text}
-  //     </Button>
-  //   )
-  // }
   const renderFilterButton = (buttonFilter: FilterValuesType, text: string) => {
     return (
       <Button color={props.todolist.filter === buttonFilter ? 'secondary' : 'primary'} onClick={() => onFilterButtonClickHandler(buttonFilter)}>

@@ -1,11 +1,12 @@
 import { authAPI } from '../features/Auth/authAPI'
 import { authActions } from '../features/Auth'
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { appActions } from './app-actions'
+import { ResultCode } from 'common/enums/TaskStatuses'
 
 const initializeApp = createAsyncThunk('application/initializeApp', async (param, { dispatch }) => {
   const res = await authAPI.me()
-  if (res.data.resultCode === 0) {
+  if (res.data.resultCode === ResultCode.Success) {
     dispatch(authActions.setIsLoggedIn({ value: true }))
   } else {
   }

@@ -1,7 +1,8 @@
 import React, { ChangeEvent, useCallback } from 'react'
 import { EditableSpan } from '../../../../common/components/EditableSpan/EditableSpan'
 import { tasksActions } from '../../index'
-import { TaskStatuses, TaskType } from '../../../../common/types/types'
+import { TaskType } from '../../../../common/types/types'
+import { TaskStatuses } from '../../../../common/enums/TaskStatuses'
 import { useActions } from '../../../../common/utils/redux-utils'
 import { Checkbox, IconButton } from '@mui/material'
 

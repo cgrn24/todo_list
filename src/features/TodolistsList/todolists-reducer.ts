@@ -6,6 +6,7 @@ import { handleAsyncServerAppError, handleAsyncServerNetworkError } from '../../
 import { TodolistType } from '../../common/types/types'
 import { ThunkError } from '../../common/utils/types'
 import { clearTasksAndTodolists } from 'common/actions/common-actions'
+import { ResultCode } from 'common/enums/TaskStatuses'
 
 const { setAppStatus } = appActions
 
@@ -34,7 +35,7 @@ const addTodolistTC = createAsyncThunk<{ todolist: TodolistType }, string, Thunk
   thunkAPI.dispatch(setAppStatus({ status: 'loading' }))
   try {
     const res = await todolistsAPI.createTodolist(title)
-    if (res.data.resultCode === 0) {
+    if (res.data.resultCode === ResultCode.Success) {
       thunkAPI.dispatch(setAppStatus({ status: 'succeeded' }))
       return { todolist: res.data.data.item }
     } else {
@@ -48,7 +49,7 @@ const addTodolistTC = createAsyncThunk<{ todolist: TodolistType }, string, Thunk
 const changeTodolistTitleTC = createAsyncThunk('todolists/changeTodolistTitle', async (param: { id: string; title: string }, thunkAPI) => {
   try {
     const res = await todolistsAPI.updateTodolist(param.id, param.title)
-    if (res.data.resultCode === 0) {
+    if (res.data.resultCode === ResultCode.Success) {
       thunkAPI.dispatch(setAppStatus({ status: 'succeeded' }))
       return { id: param.id, title: param.title }
     } else {
