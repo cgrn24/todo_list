@@ -17,6 +17,7 @@ import { selectIsInitialized, selectStatus } from './selectors'
 import { authActions, authSelectors, Login } from '../features/Auth'
 import { useActions } from '../common/hooks/useActions'
 import { appActions } from '.'
+import { NotFound } from 'common/components/NotFound/NotFound'
 
 export const theme = createTheme({
   palette: {
@@ -79,7 +80,7 @@ const App = () => {
           <Routes>
             <Route path={'/'} element={<TodolistsList />} />
             <Route path={'/login'} element={<Login />} />
-            <Route path={'/404'} element={<h1>404: PAGE NOT FOUND</h1>} />
+            <Route path={'/404'} element={<NotFound />} />
             <Route path='*' element={<Navigate to='/404' />} />
           </Routes>
         </Container>
