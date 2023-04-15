@@ -25,6 +25,10 @@ export const Login = () => {
         return {
           email: 'Email is required',
         }
+      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+        return {
+          email: 'Invalid email adress',
+        }
       }
       if (!values.password) {
         return {
@@ -70,10 +74,23 @@ export const Login = () => {
               <p>Password: free</p>
             </FormLabel>
             <FormGroup>
-              <TextField label='Email' margin='normal' {...formik.getFieldProps('email')} />
-              {formik.errors.email ? <div className={style.error}>{formik.errors.email}</div> : null}
-              <TextField type='password' label='Password' margin='normal' {...formik.getFieldProps('password')} />
-              {formik.errors.password ? <div className={style.error}>{formik.errors.password}</div> : null}
+              <TextField
+                label='Email'
+                margin='normal'
+                helperText={formik.touched.email && formik.errors.email}
+                error={formik.touched.email && !!formik.errors.email}
+                {...formik.getFieldProps('email')}
+              />
+              {/* {formik.errors.email ? <div className={style.error}>{formik.errors.email}</div> : null} */}
+              <TextField
+                type='password'
+                label='Password'
+                margin='normal'
+                helperText={formik.touched.password && formik.errors.password}
+                error={formik.touched.password && !!formik.errors.password}
+                {...formik.getFieldProps('password')}
+              />
+              {/* {formik.errors.password ? <div className={style.error}>{formik.errors.password}</div> : null} */}
               <FormControlLabel label={'Remember me'} control={<Checkbox {...formik.getFieldProps('rememberMe')} checked={formik.values.rememberMe} />} />
               <Button type={'submit'} variant={'contained'} color={'primary'}>
                 Login
