@@ -15,7 +15,7 @@ import { CircularProgress, createTheme, ThemeProvider } from '@mui/material'
 import { useSelector } from 'react-redux'
 import { selectIsInitialized, selectStatus } from './selectors'
 import { authActions, authSelectors, Login } from '../features/Auth'
-import { useActions } from '../common/utils/redux-utils'
+import { useActions } from '../common/hooks/useActions'
 import { appActions } from '.'
 
 export const theme = createTheme({

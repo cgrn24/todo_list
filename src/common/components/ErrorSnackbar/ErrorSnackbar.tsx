@@ -2,9 +2,9 @@ import React, { SyntheticEvent } from 'react'
 import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import { useSelector } from 'react-redux'
-import { AppRootStateType } from '../../utils/types'
-import { useActions } from '../../utils/redux-utils'
+import { useActions } from '../../hooks/useActions'
 import { appActions } from '../../../app/app-actions'
+import { AppRootStateType } from 'app/store'
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />

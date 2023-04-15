@@ -19,12 +19,14 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunkMiddleware),
 })
 
-// а это, чтобы можно было в консоли браузера обращаться к store в любой момент
-// @ts-ignore
-window.store = store
-
 if (process.env.NODE_ENV === 'development' && module.hot) {
   module.hot.accept('./store', () => {
     store.replaceReducer(rootReducer)
   })
 }
+export type RootReducerType = typeof rootReducer
+export type AppRootStateType = ReturnType<RootReducerType>
+export type AppDispatchType = typeof store.dispatch
+
+// @ts-ignore
+window.store = store

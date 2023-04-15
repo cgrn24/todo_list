@@ -3,10 +3,10 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { appActions } from '../../app/app-actions'
 import { handleAsyncServerAppError, handleAsyncServerNetworkError } from '../../common/utils/error-utils'
 import { asyncActions as asyncTodolistsActions } from './todolists-reducer'
-import { AppRootStateType, ThunkError } from '../../common/utils/types'
-import { TaskType, UpdateTaskModelType } from '../../common/types/types'
-import { ResultCode, TaskPriorities, TaskStatuses } from '../../common/enums/TaskStatuses'
+import { TaskType, ThunkError, UpdateTaskModelType } from '../../common/types/types'
+import { ResultCode, TaskPriorities, TaskStatuses } from '../../common/enums/common-enums'
 import { clearTasksAndTodolists } from 'common/actions/common-actions'
+import { AppRootStateType } from 'app/store'
 
 const initialState: TasksStateType = {}
 

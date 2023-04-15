@@ -6,11 +6,11 @@ import { AddItemForm, AddItemFormSubmitHelperType } from '../../common/component
 import { Todolist } from './Todolist/Todolist'
 import { selectIsLoggedIn } from '../Auth/selectors'
 import { todolistsActions } from './index'
-import { AppRootStateType } from '../../common/utils/types'
-import { useActions } from '../../common/utils/redux-utils'
+import { useActions } from '../../common/hooks/useActions'
 import { useAppDispatch } from '../../common/hooks/useAppDispatch'
 import { Grid } from '@mui/material'
 import { Navigate } from 'react-router-dom'
+import { AppRootStateType } from 'app/store'
 
 export const TodolistsList = () => {
   const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>((state) => state.todolists)

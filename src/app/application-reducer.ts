@@ -2,7 +2,7 @@ import { authAPI } from '../features/Auth/authAPI'
 import { authActions } from '../features/Auth'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { appActions } from './app-actions'
-import { ResultCode } from 'common/enums/TaskStatuses'
+import { ResultCode } from 'common/enums/common-enums'
 
 const initializeApp = createAsyncThunk('application/initializeApp', async (param, { dispatch }) => {
   const res = await authAPI.me()

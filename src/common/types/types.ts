@@ -1,4 +1,4 @@
-import { TaskStatuses, TaskPriorities } from '../enums/TaskStatuses'
+import { TaskStatuses, TaskPriorities } from '../enums/common-enums'
 
 export type LoginParamsType = {
   email: string
@@ -51,3 +51,5 @@ export type UserType = {
   email: string
   login: string
 }
+
+export type ThunkError = { rejectValue: { errors: Array<string>; fieldsErrors?: Array<FieldErrorType> } }

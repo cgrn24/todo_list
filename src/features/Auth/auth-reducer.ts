@@ -5,7 +5,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { FieldErrorType, LoginParamsType } from '../../common/types/types'
 import { appActions } from '../../app/app-actions'
 import { clearTasksAndTodolists } from 'common/actions/common-actions'
-import { ResultCode } from 'common/enums/TaskStatuses'
+import { ResultCode } from 'common/enums/common-enums'
 
 const { setAppStatus } = appActions
 

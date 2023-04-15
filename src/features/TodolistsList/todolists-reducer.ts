@@ -3,10 +3,9 @@ import { RequestStatusType } from '../../app'
 import { appActions } from '../../app/app-actions'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { handleAsyncServerAppError, handleAsyncServerNetworkError } from '../../common/utils/error-utils'
-import { TodolistType } from '../../common/types/types'
-import { ThunkError } from '../../common/utils/types'
+import { ThunkError, TodolistType } from '../../common/types/types'
 import { clearTasksAndTodolists } from 'common/actions/common-actions'
-import { ResultCode } from 'common/enums/TaskStatuses'
+import { ResultCode } from 'common/enums/common-enums'
 
 const { setAppStatus } = appActions
 

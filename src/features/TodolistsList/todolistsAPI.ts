@@ -1,5 +1,5 @@
 import { GetTasksResponse, ResponseType, TaskType, TodolistType, UpdateTaskModelType } from '../../common/types/types'
-import { instance } from '../../common/api/instance'
+import { instance } from '../../common/api/commonAPI'
 
 // api
 
