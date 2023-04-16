@@ -5,8 +5,6 @@ import { tasksReducer, todolistsReducer } from 'features/TodolistsList'
 import { appReducer } from 'app'
 import { authReducer } from 'features/Auth'
 
-// непосредственно создаём store
-// export const store = legacy_createStore(rootReducer, applyMiddleware(thunkMiddleware))
 export const rootReducer = combineReducers({
   tasks: tasksReducer,
   todolists: todolistsReducer,
