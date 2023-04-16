@@ -1,7 +1,7 @@
 {
   "name": "task_manager",
   "version": "0.1.0",
-  "homepage": "https://cgrn24.github.io/task-manager/",
+  "homepage": "https://cgrn24.github.io/todo_list/",
   "private": true,
   "dependencies": {
     "@emotion/react": "11.10.5",
