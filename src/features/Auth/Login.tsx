@@ -37,8 +37,8 @@ export const Login = () => {
       }
     },
     initialValues: {
-      email: '',
-      password: '',
+      email: 'free@samuraijs.com',
+      password: 'free',
       rememberMe: false,
     },
     onSubmit: async (values: FormValuesType, formikHelpers: FormikHelpers<FormValuesType>) => {
@@ -81,7 +81,6 @@ export const Login = () => {
                 error={formik.touched.email && !!formik.errors.email}
                 {...formik.getFieldProps('email')}
               />
-              {/* {formik.errors.email ? <div className={style.error}>{formik.errors.email}</div> : null} */}
               <TextField
                 type='password'
                 label='Password'
@@ -90,7 +89,6 @@ export const Login = () => {
                 error={formik.touched.password && !!formik.errors.password}
                 {...formik.getFieldProps('password')}
               />
-              {/* {formik.errors.password ? <div className={style.error}>{formik.errors.password}</div> : null} */}
               <FormControlLabel label={'Remember me'} control={<Checkbox {...formik.getFieldProps('rememberMe')} checked={formik.values.rememberMe} />} />
               <Button type={'submit'} variant={'contained'} color={'primary'}>
                 Login

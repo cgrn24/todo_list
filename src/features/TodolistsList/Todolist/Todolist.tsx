@@ -19,7 +19,7 @@ type PropsType = {
 
 export const Todolist = React.memo(function ({ ...props }: PropsType) {
   const { fetchTasks, reorderTask } = useActions(tasksActions)
-  const { changeTodolistFilter, removeTodolistTC, changeTodolistTitleTC } = useActions(todolistsActions)
+  const { changeTodolistFilter, removeTodolist, changeTodolistTitle } = useActions(todolistsActions)
 
   const dispatch = useAppDispatch()
 
@@ -59,12 +59,12 @@ export const Todolist = React.memo(function ({ ...props }: PropsType) {
     [props.todolist.id]
   )
 
-  const removeTodolist = () => {
-    removeTodolistTC(props.todolist.id)
+  const removeTodolistHandler = () => {
+    removeTodolist(props.todolist.id)
   }
-  const changeTodolistTitle = useCallback(
+  const changeTodolistTitleHandler = useCallback(
     (title: string) => {
-      changeTodolistTitleTC({ id: props.todolist.id, title: title })
+      changeTodolistTitle({ id: props.todolist.id, title: title })
     },
     [props.todolist.id]
   )
@@ -99,14 +99,14 @@ export const Todolist = React.memo(function ({ ...props }: PropsType) {
     <Paper style={{ padding: '10px', position: 'relative' }}>
       <IconButton
         size={'small'}
-        onClick={removeTodolist}
+        onClick={removeTodolistHandler}
         disabled={props.todolist.entityStatus === 'loading'}
         style={{ position: 'absolute', right: '5px', top: '5px' }}
       >
         <ClearIcon fontSize={'small'} />
       </IconButton>
       <h3>
-        <EditableSpan value={props.todolist.title} onChange={changeTodolistTitle} />
+        <EditableSpan value={props.todolist.title} onChange={changeTodolistTitleHandler} />
       </h3>
       <AddItemForm addItem={addTaskCallback} disabled={props.todolist.entityStatus === 'loading'} />
       <DragDropContext onDragEnd={onDragEnd}>
