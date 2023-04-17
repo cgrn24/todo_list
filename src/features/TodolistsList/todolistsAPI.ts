@@ -20,6 +20,10 @@ export const todolistsAPI = {
     const promise = instance.put<ResponseType>(`todo-lists/${id}`, { title: title })
     return promise
   },
+  reorderTodolists(id: string, putAfterId: string | null) {
+    const promise = instance.put<ResponseType>(`todo-lists/${id}/reorder`, { putAfterId: putAfterId })
+    return promise
+  },
   getTasks(todolistId: string) {
     return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`)
   },

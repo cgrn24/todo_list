@@ -59,12 +59,30 @@ const changeTodolistTitleTC = createAsyncThunk('todolists/changeTodolistTitle', 
     return handleAsyncServerNetworkError(error, thunkAPI, false)
   }
 })
+const reorderTodolistsTC = createAsyncThunk(
+  'todolists/reorderTodolists',
+  async (param: { id: string; putAfterId: string | null; sourceId: number; destinationId: number }, thunkAPI) => {
+    try {
+      const res = await todolistsAPI.reorderTodolists(param.id, param.putAfterId)
+      if (res.data.resultCode === ResultCode.Success) {
+        thunkAPI.dispatch(setAppStatus({ status: 'succeeded' }))
+        return { sourceId: param.sourceId, destinationId: param.destinationId }
+      } else {
+        return handleAsyncServerAppError(res.data, thunkAPI)
+      }
+    } catch (error) {
+      //@ts-ignore
+      return handleAsyncServerNetworkError(error, thunkAPI, false)
+    }
+  }
+)
 
 export const asyncActions = {
   fetchTodolistsTC,
   removeTodolistTC,
   addTodolistTC,
   changeTodolistTitleTC,
+  reorderTodolistsTC,
 }
 
 export const slice = createSlice({
@@ -100,6 +118,10 @@ export const slice = createSlice({
       })
       .addCase(clearTasksAndTodolists, () => {
         return []
+      })
+      .addCase(reorderTodolistsTC.fulfilled, (state, action) => {
+        const [todo] = state.splice(action.payload.sourceId, 1)
+        state.splice(action.payload.destinationId, 0, todo)
       })
   },
 })
