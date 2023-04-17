@@ -5,7 +5,7 @@ import { todolistsActions } from './'
 import { TodolistType } from '../../common/types/types'
 
 const todolistsReducer = slice.reducer
-const { addTodolistTC, changeTodolistTitleTC, fetchTodolistsTC, removeTodolistTC } = todolistsActions
+const { addTodolist, changeTodolistTitle, fetchTodolists, removeTodolist } = todolistsActions
 
 let todolistId1: string
 let todolistId2: string
@@ -21,7 +21,7 @@ beforeEach(() => {
 })
 
 test('correct todolist should be removed', () => {
-  const endState = todolistsReducer(startState, removeTodolistTC.fulfilled({ id: todolistId1 }, 'requestId', todolistId1))
+  const endState = todolistsReducer(startState, removeTodolist.fulfilled({ id: todolistId1 }, 'requestId', todolistId1))
 
   expect(endState.length).toBe(1)
   expect(endState[0].id).toBe(todolistId2)
@@ -35,7 +35,7 @@ test('correct todolist should be added', () => {
     order: 0,
   }
 
-  const endState = todolistsReducer(startState, addTodolistTC.fulfilled({ todolist }, 'requestId', todolist.title))
+  const endState = todolistsReducer(startState, addTodolist.fulfilled({ todolist }, 'requestId', todolist.title))
 
   expect(endState.length).toBe(3)
   expect(endState[0].title).toBe(todolist.title)
@@ -46,7 +46,7 @@ test('correct todolist should change its name', () => {
   let newTodolistTitle = 'New Todolist'
 
   let payload = { id: todolistId2, title: newTodolistTitle }
-  const action = changeTodolistTitleTC.fulfilled(payload, 'requestId', payload)
+  const action = changeTodolistTitle.fulfilled(payload, 'requestId', payload)
 
   const endState = todolistsReducer(startState, action)
 
@@ -66,7 +66,7 @@ test('correct filter of todolist should be changed', () => {
 })
 test('todolists should be added', () => {
   let payload = { todolists: startState }
-  const action = fetchTodolistsTC.fulfilled(payload, 'requestId', undefined)
+  const action = fetchTodolists.fulfilled(payload, 'requestId', undefined)
 
   const endState = todolistsReducer([], action)
 

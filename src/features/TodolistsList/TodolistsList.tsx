@@ -26,20 +26,20 @@ export const TodolistsList = () => {
     const id = todolists[sourceId].id
     const putAfterId = destinationId !== 0 ? todolists[destinationId - 1].id : todolists[0].id
 
-    reorderTodolistsTC({ id, putAfterId, sourceId, destinationId })
+    reorderTodolists({ id, putAfterId, sourceId, destinationId })
   }
 
   const scrollRef = useHorizontalScroll(3)
 
   const dispatch = useAppDispatch()
 
-  const { fetchTodolistsTC, addTodolistTC, reorderTodolistsTC } = useActions(todolistsActions)
+  const { fetchTodolists, addTodolist, reorderTodolists } = useActions(todolistsActions)
 
   const addTodolistCallback = useCallback(async (title: string, helper: AddItemFormSubmitHelperType) => {
-    let thunk = addTodolistTC(title)
+    let thunk = addTodolist(title)
     const resultAction = await dispatch(thunk)
 
-    if (todolistsActions.addTodolistTC.rejected.match(resultAction)) {
+    if (todolistsActions.addTodolist.rejected.match(resultAction)) {
       if (resultAction.payload?.errors?.length) {
         const errorMessage = resultAction.payload?.errors[0]
         helper.setError(errorMessage)
@@ -56,7 +56,7 @@ export const TodolistsList = () => {
       return
     }
     if (!todolists.length) {
-      fetchTodolistsTC()
+      fetchTodolists()
     }
   }, [])
 
