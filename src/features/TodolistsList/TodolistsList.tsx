@@ -10,6 +10,8 @@ import { Grid } from '@mui/material'
 import { Navigate } from 'react-router-dom'
 import { selectTasks, selectTodos } from './selectors'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
+import { mergeRefs } from 'react-merge-refs'
+import { useHorizontalScroll } from 'common/hooks'
 
 export const TodolistsList = () => {
   const todolists = useSelector(selectTodos)
@@ -61,6 +63,7 @@ export const TodolistsList = () => {
     return <Navigate to={'/login'} />
   }
 
+  const scrollRef = useHorizontalScroll(3)
   return (
     <>
       <Grid container style={{ padding: '20px' }}>
@@ -69,7 +72,13 @@ export const TodolistsList = () => {
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId='todolists' direction='horizontal'>
           {(provided) => (
-            <Grid container spacing={3} style={{ flexWrap: 'nowrap', overflowX: 'scroll' }} {...provided.droppableProps} ref={provided.innerRef}>
+            <Grid
+              container
+              spacing={3}
+              style={{ flexWrap: 'nowrap', overflowX: 'scroll' }}
+              {...provided.droppableProps}
+              ref={mergeRefs([provided.innerRef, scrollRef])}
+            >
               {todolists.map((tl, index) => {
                 let allTodolistTasks = tasks[tl.id]
 
