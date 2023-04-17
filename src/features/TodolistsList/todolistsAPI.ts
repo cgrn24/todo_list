@@ -1,28 +1,21 @@
 import { GetTasksResponse, ResponseType, TaskType, TodolistType, UpdateTaskModelType } from '../../common/types/types'
 import { instance } from '../../common/api/commonAPI'
 
-// api
-
 export const todolistsAPI = {
   getTodolists() {
-    const promise = instance.get<TodolistType[]>('todo-lists')
-    return promise
+    return instance.get<TodolistType[]>('todo-lists')
   },
   createTodolist(title: string) {
-    const promise = instance.post<ResponseType<{ item: TodolistType }>>('todo-lists', { title: title })
-    return promise
+    return instance.post<ResponseType<{ item: TodolistType }>>('todo-lists', { title: title })
   },
   deleteTodolist(id: string) {
-    const promise = instance.delete<ResponseType>(`todo-lists/${id}`)
-    return promise
+    return instance.delete<ResponseType>(`todo-lists/${id}`)
   },
   updateTodolist(id: string, title: string) {
-    const promise = instance.put<ResponseType>(`todo-lists/${id}`, { title: title })
-    return promise
+    return instance.put<ResponseType>(`todo-lists/${id}`, { title: title })
   },
   reorderTodolists(id: string, putAfterId: string | null) {
-    const promise = instance.put<ResponseType>(`todo-lists/${id}/reorder`, { putAfterId: putAfterId })
-    return promise
+    return instance.put<ResponseType>(`todo-lists/${id}/reorder`, { putAfterId: putAfterId })
   },
   getTasks(todolistId: string) {
     return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`)
@@ -35,5 +28,8 @@ export const todolistsAPI = {
   },
   updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
     return instance.put<ResponseType<TaskType>>(`todo-lists/${todolistId}/tasks/${taskId}`, model)
+  },
+  reorderTask(todolistId: string, taskId: string, putAfterId: string | null) {
+    return instance.put<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}/reorder`, { putAfterId: putAfterId })
   },
 }

@@ -19,7 +19,6 @@ export const TodolistsList = () => {
   const isLoggedIn = useSelector(selectIsLoggedIn)
 
   const onDragEnd = (result: DropResult) => {
-    debugger
     const { source, destination } = result
     if (!destination) return
     const sourceId = source.index
@@ -29,6 +28,8 @@ export const TodolistsList = () => {
 
     reorderTodolistsTC({ id, putAfterId, sourceId, destinationId })
   }
+
+  const scrollRef = useHorizontalScroll(3)
 
   const dispatch = useAppDispatch()
 
@@ -63,7 +64,6 @@ export const TodolistsList = () => {
     return <Navigate to={'/login'} />
   }
 
-  const scrollRef = useHorizontalScroll(3)
   return (
     <>
       <Grid container style={{ padding: '20px' }}>

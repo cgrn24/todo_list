@@ -78,12 +78,30 @@ export const updateTask = createAsyncThunk(
     }
   }
 )
+export const reorderTask = createAsyncThunk(
+  'tasks/reorderTask',
+  async (param: { taskId: string; putAfterId: string | null; sourceId: number; destinationId: number; todolistId: string }, thunkAPI) => {
+    debugger
+    const res = await todolistsAPI.reorderTask(param.todolistId, param.taskId, param.putAfterId)
+    try {
+      if (res.data.resultCode === ResultCode.Success) {
+        return { sourceId: param.sourceId, destinationId: param.destinationId, todolistId: param.todolistId }
+      } else {
+        return handleAsyncServerAppError(res.data, thunkAPI)
+      }
+    } catch (error) {
+      //@ts-ignore
+      return handleAsyncServerNetworkError(error, thunkAPI)
+    }
+  }
+)
 
 export const asyncActions = {
   fetchTasks,
   removeTask,
   addTask,
   updateTask,
+  reorderTask,
 }
 
 export const slice = createSlice({
@@ -125,6 +143,10 @@ export const slice = createSlice({
       })
       .addCase(clearTasksAndTodolists, () => {
         return {}
+      })
+      .addCase(reorderTask.fulfilled, (state, action) => {
+        const [task] = state[action.payload.todolistId].splice(action.payload.sourceId, 1)
+        state[action.payload.todolistId].splice(action.payload.destinationId, 0, task)
       })
   },
 })

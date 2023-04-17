@@ -1,7 +1,6 @@
 import React, { ChangeEvent, KeyboardEvent, useState } from 'react'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
-import { AddBox } from '@mui/icons-material'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 
 export type AddItemFormSubmitHelperType = { setError: (error: string) => void; setTitle: (title: string) => void }

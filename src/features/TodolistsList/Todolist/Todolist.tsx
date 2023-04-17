@@ -10,6 +10,7 @@ import { useActions } from '../../../common/hooks/useActions'
 import { useAppDispatch } from '../../../common/hooks/useAppDispatch'
 import { Button, ButtonGroup, IconButton, Paper } from '@mui/material'
 import ClearIcon from '@mui/icons-material/Clear'
+import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 
 type PropsType = {
   todolist: TodolistDomainType
@@ -17,10 +18,21 @@ type PropsType = {
 }
 
 export const Todolist = React.memo(function ({ ...props }: PropsType) {
-  const { fetchTasks } = useActions(tasksActions)
+  const { fetchTasks, reorderTask } = useActions(tasksActions)
   const { changeTodolistFilter, removeTodolistTC, changeTodolistTitleTC } = useActions(todolistsActions)
 
   const dispatch = useAppDispatch()
+
+  const onDragEnd = (result: DropResult) => {
+    const { source, destination } = result
+    if (!destination) return
+    const sourceId = source.index
+    const destinationId = destination.index
+    const taskId = props.tasks[sourceId].id
+    const putAfterId = destinationId !== 0 ? props.tasks[destinationId - 1].id : props.tasks[0].id
+    const todolistId = props.todolist.id
+    reorderTask({ taskId, putAfterId, sourceId, destinationId, todolistId })
+  }
 
   useEffect(() => {
     if (!props.tasks.length) {
@@ -97,12 +109,25 @@ export const Todolist = React.memo(function ({ ...props }: PropsType) {
         <EditableSpan value={props.todolist.title} onChange={changeTodolistTitle} />
       </h3>
       <AddItemForm addItem={addTaskCallback} disabled={props.todolist.entityStatus === 'loading'} />
-      <div>
-        {tasksForTodolist.map((t) => (
-          <Task key={t.id} task={t} todolistId={props.todolist.id} />
-        ))}
-        {!tasksForTodolist.length && <div style={{ padding: '10px', color: 'grey' }}>No task</div>}
-      </div>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId='tasks'>
+          {(provided) => (
+            <div {...provided.droppableProps} ref={provided.innerRef}>
+              {tasksForTodolist.map((t, index) => (
+                <Draggable key={t.id} draggableId={t.id} index={index}>
+                  {(provided) => (
+                    <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                      <Task key={t.id} task={t} todolistId={props.todolist.id} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+              {!tasksForTodolist.length && <div style={{ padding: '10px', color: 'grey' }}>No task</div>}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
       <div style={{ paddingTop: '10px' }}>
         <ButtonGroup variant='contained' aria-label='outlined primary button group'>
           {renderFilterButton('all', 'All')}
