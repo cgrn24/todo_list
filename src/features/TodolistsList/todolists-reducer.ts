@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios'
 import { todolistsAPI } from './todolistsAPI'
 import { RequestStatusType } from '../../app'
 import { appActions } from '../../app/app-actions'
@@ -15,20 +16,28 @@ const fetchTodolists = createAsyncThunk<{ todolists: TodolistType[] }, undefined
     const res = await todolistsAPI.getTodolists()
     thunkAPI.dispatch(setAppStatus({ status: 'succeeded' }))
     return { todolists: res.data }
-  } catch (error) {
-    //@ts-ignore
+  } catch (e) {
+    const error = e as AxiosError
     return handleAsyncServerNetworkError(error, thunkAPI)
   }
 })
-const removeTodolist = createAsyncThunk<{ id: string }, string, ThunkError>('todolists/removeTodolist', async (todolistId, { dispatch, rejectWithValue }) => {
-  //изменим глобальный статус приложения, чтобы вверху полоса побежала
-  dispatch(setAppStatus({ status: 'loading' }))
-  //изменим статус конкретного тудулиста, чтобы он мог задизеблить что надо
-  dispatch(changeTodolistEntityStatus({ id: todolistId, status: 'loading' }))
-  const res = await todolistsAPI.deleteTodolist(todolistId)
-  //скажем глобально приложению, что асинхронная операция завершена
-  dispatch(setAppStatus({ status: 'succeeded' }))
-  return { id: todolistId }
+const removeTodolist = createAsyncThunk<{ id: string }, string, ThunkError>('todolists/removeTodolist', async (todolistId, thunkAPI) => {
+  thunkAPI.dispatch(setAppStatus({ status: 'loading' }))
+  try {
+    thunkAPI.dispatch(changeTodolistEntityStatus({ id: todolistId, status: 'loading' }))
+    const res = await todolistsAPI.deleteTodolist(todolistId)
+    if (res.data.resultCode === ResultCode.Success) {
+      thunkAPI.dispatch(setAppStatus({ status: 'succeeded' }))
+      return { id: todolistId }
+    } else {
+      thunkAPI.dispatch(changeTodolistEntityStatus({ id: todolistId, status: 'idle' }))
+      return handleAsyncServerAppError(res.data, thunkAPI)
+    }
+  } catch (e) {
+    thunkAPI.dispatch(changeTodolistEntityStatus({ id: todolistId, status: 'idle' }))
+    const error = e as AxiosError
+    return handleAsyncServerNetworkError(error, thunkAPI)
+  }
 })
 const addTodolist = createAsyncThunk<{ todolist: TodolistType }, string, ThunkError>('todolists/addTodolist', async (title, thunkAPI) => {
   thunkAPI.dispatch(setAppStatus({ status: 'loading' }))
@@ -38,14 +47,15 @@ const addTodolist = createAsyncThunk<{ todolist: TodolistType }, string, ThunkEr
       thunkAPI.dispatch(setAppStatus({ status: 'succeeded' }))
       return { todolist: res.data.data.item }
     } else {
-      return handleAsyncServerAppError(res.data, thunkAPI, false)
+      return handleAsyncServerAppError(res.data, thunkAPI)
     }
-  } catch (error) {
-    //@ts-ignore
-    return handleAsyncServerNetworkError(error, thunkAPI, false)
+  } catch (e) {
+    const error = e as AxiosError
+    return handleAsyncServerNetworkError(error, thunkAPI)
   }
 })
 const changeTodolistTitle = createAsyncThunk('todolists/changeTodolistTitle', async (param: { id: string; title: string }, thunkAPI) => {
+  thunkAPI.dispatch(setAppStatus({ status: 'loading' }))
   try {
     const res = await todolistsAPI.updateTodolist(param.id, param.title)
     if (res.data.resultCode === ResultCode.Success) {
@@ -54,14 +64,15 @@ const changeTodolistTitle = createAsyncThunk('todolists/changeTodolistTitle', as
     } else {
       return handleAsyncServerAppError(res.data, thunkAPI)
     }
-  } catch (error) {
-    //@ts-ignore
-    return handleAsyncServerNetworkError(error, thunkAPI, false)
+  } catch (e) {
+    const error = e as AxiosError
+    return handleAsyncServerNetworkError(error, thunkAPI)
   }
 })
 const reorderTodolists = createAsyncThunk(
   'todolists/reorderTodolists',
   async (param: { id: string; putAfterId: string | null; sourceId: number; destinationId: number }, thunkAPI) => {
+    thunkAPI.dispatch(setAppStatus({ status: 'loading' }))
     try {
       const res = await todolistsAPI.reorderTodolists(param.id, param.putAfterId)
       if (res.data.resultCode === ResultCode.Success) {
@@ -70,9 +81,9 @@ const reorderTodolists = createAsyncThunk(
       } else {
         return handleAsyncServerAppError(res.data, thunkAPI)
       }
-    } catch (error) {
-      //@ts-ignore
-      return handleAsyncServerNetworkError(error, thunkAPI, false)
+    } catch (e) {
+      const error = e as AxiosError
+      return handleAsyncServerNetworkError(error, thunkAPI)
     }
   }
 )

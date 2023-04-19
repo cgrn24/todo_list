@@ -17,15 +17,14 @@ export const TodolistsList = () => {
   const todolists = useSelector(selectTodos)
   const tasks = useSelector(selectTasks)
   const isLoggedIn = useSelector(selectIsLoggedIn)
-
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result
     if (!destination) return
+    if (destination.droppableId === source.droppableId && destination.index === source.index) return
     const sourceId = source.index
     const destinationId = destination.index
     const id = todolists[sourceId].id
     const putAfterId = destinationId !== 0 ? todolists[destinationId - 1].id : todolists[0].id
-
     reorderTodolists({ id, putAfterId, sourceId, destinationId })
   }
 

@@ -7,6 +7,7 @@ import { TaskType, ThunkError, UpdateTaskModelType } from '../../common/types/ty
 import { ResultCode, TaskPriorities, TaskStatuses } from '../../common/enums/common-enums'
 import { clearTasksAndTodolists } from 'common/actions/common-actions'
 import { AppRootStateType } from 'app/store'
+import { AxiosError } from 'axios'
 
 const initialState: TasksStateType = {}
 
@@ -17,16 +18,21 @@ export const fetchTasks = createAsyncThunk<{ tasks: TaskType[]; todolistId: stri
     const tasks = res.data.items
     thunkAPI.dispatch(appActions.setAppStatus({ status: 'succeeded' }))
     return { tasks, todolistId }
-  } catch (error) {
-    //@ts-ignore
+  } catch (e) {
+    const error = e as AxiosError
     return handleAsyncServerNetworkError(error, thunkAPI)
   }
 })
 export const removeTask = createAsyncThunk<{ taskId: string; todolistId: string }, { taskId: string; todolistId: string }, ThunkError>(
   'tasks/removeTask',
   async (param, thunkAPI) => {
-    const res = await todolistsAPI.deleteTask(param.todolistId, param.taskId)
-    return { taskId: param.taskId, todolistId: param.todolistId }
+    try {
+      await todolistsAPI.deleteTask(param.todolistId, param.taskId)
+      return { taskId: param.taskId, todolistId: param.todolistId }
+    } catch (e) {
+      const error = e as AxiosError
+      return handleAsyncServerNetworkError(error, thunkAPI)
+    }
   }
 )
 export const addTask = createAsyncThunk<TaskType, { title: string; todolistId: string }, ThunkError>('tasks/addTask', async (param, thunkAPI) => {
@@ -40,9 +46,9 @@ export const addTask = createAsyncThunk<TaskType, { title: string; todolistId: s
       handleAsyncServerAppError(res.data, thunkAPI, false)
       return thunkAPI.rejectWithValue({ errors: res.data.messages, fieldsErrors: res.data.fieldsErrors })
     }
-  } catch (err) {
-    //@ts-ignore
-    return handleAsyncServerNetworkError(err, thunkAPI, false)
+  } catch (e) {
+    const error = e as AxiosError
+    return handleAsyncServerNetworkError(error, thunkAPI, false)
   }
 })
 export const updateTask = createAsyncThunk(
@@ -72,8 +78,8 @@ export const updateTask = createAsyncThunk(
       } else {
         return handleAsyncServerAppError(res.data, thunkAPI)
       }
-    } catch (error) {
-      //@ts-ignore
+    } catch (e) {
+      const error = e as AxiosError
       return handleAsyncServerNetworkError(error, thunkAPI)
     }
   }
@@ -89,8 +95,8 @@ export const reorderTask = createAsyncThunk(
       } else {
         return handleAsyncServerAppError(res.data, thunkAPI)
       }
-    } catch (error) {
-      //@ts-ignore
+    } catch (e) {
+      const error = e as AxiosError
       return handleAsyncServerNetworkError(error, thunkAPI)
     }
   }

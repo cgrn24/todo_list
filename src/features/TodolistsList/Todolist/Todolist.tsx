@@ -26,6 +26,7 @@ export const Todolist = React.memo(function ({ ...props }: PropsType) {
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result
     if (!destination) return
+    if (destination.droppableId === source.droppableId && destination.index === source.index) return
     const sourceId = source.index
     const destinationId = destination.index
     const taskId = props.tasks[sourceId].id
