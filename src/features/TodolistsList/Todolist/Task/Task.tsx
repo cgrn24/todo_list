@@ -5,7 +5,6 @@ import { TaskType } from '../../../../common/types/types'
 import { TaskStatuses } from '../../../../common/enums/common-enums'
 import { useActions } from '../../../../common/hooks/useActions'
 import { Checkbox, IconButton } from '@mui/material'
-
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
 
 type TaskPropsType = {

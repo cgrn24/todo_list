@@ -10,11 +10,12 @@ import { useActions } from '../../../common/hooks/useActions'
 import { useAppDispatch } from '../../../common/hooks/useAppDispatch'
 import { Button, ButtonGroup, IconButton, Paper } from '@mui/material'
 import ClearIcon from '@mui/icons-material/Clear'
-import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
+import { DragDropContext, Draggable, DraggableProvidedDragHandleProps, Droppable, DropResult } from 'react-beautiful-dnd'
 
 type PropsType = {
   todolist: TodolistDomainType
   tasks: Array<TaskType>
+  draggable: DraggableProvidedDragHandleProps | null | undefined
 }
 
 export const Todolist = React.memo(function ({ ...props }: PropsType) {
@@ -106,10 +107,12 @@ export const Todolist = React.memo(function ({ ...props }: PropsType) {
       >
         <ClearIcon fontSize={'small'} />
       </IconButton>
-      <h3>
-        <EditableSpan value={props.todolist.title} onChange={changeTodolistTitleHandler} />
-      </h3>
-      <AddItemForm addItem={addTaskCallback} disabled={props.todolist.entityStatus === 'loading'} />
+      <div {...props.draggable}>
+        <h3>
+          <EditableSpan value={props.todolist.title} onChange={changeTodolistTitleHandler} />
+        </h3>
+        <AddItemForm addItem={addTaskCallback} disabled={props.todolist.entityStatus === 'loading'} />
+      </div>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId='tasks'>
           {(provided) => (

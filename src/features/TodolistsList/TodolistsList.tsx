@@ -84,9 +84,9 @@ export const TodolistsList = () => {
                 return (
                   <Draggable key={tl.id} draggableId={tl.id} index={index}>
                     {(provided) => (
-                      <Grid item ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                      <Grid item ref={provided.innerRef} {...provided.draggableProps}>
                         <div style={{ width: '290px' }}>
-                          <Todolist todolist={tl} tasks={allTodolistTasks} />
+                          <Todolist todolist={tl} tasks={allTodolistTasks} draggable={provided.dragHandleProps} />
                         </div>
                       </Grid>
                     )}
