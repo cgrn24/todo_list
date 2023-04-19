@@ -1,5 +1,5 @@
 import { todolistsAPI } from './todolistsAPI'
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { appActions } from '../../app/app-actions'
 import { handleAsyncServerAppError, handleAsyncServerNetworkError } from '../../common/utils/error-utils'
 import { asyncActions as asyncTodolistsActions } from './todolists-reducer'
@@ -87,15 +87,17 @@ export const updateTask = createAsyncThunk(
 export const reorderTask = createAsyncThunk(
   'tasks/reorderTask',
   async (param: { taskId: string; putAfterItemId: string | null; sourceId: number; destinationId: number; todolistId: string }, thunkAPI) => {
-    debugger
-    const res = await todolistsAPI.reorderTask(param.todolistId, param.taskId, param.putAfterItemId)
     try {
+      thunkAPI.dispatch(reorderTaskAction({ sourceId: param.sourceId, destinationId: param.destinationId, todolistId: param.todolistId }))
+      const res = await todolistsAPI.reorderTask(param.todolistId, param.taskId, param.putAfterItemId)
       if (res.data.resultCode === ResultCode.Success) {
-        return { sourceId: param.sourceId, destinationId: param.destinationId, todolistId: param.todolistId }
+        return null
       } else {
+        thunkAPI.dispatch(reorderTaskAction({ sourceId: param.destinationId, destinationId: param.sourceId, todolistId: param.todolistId }))
         return handleAsyncServerAppError(res.data, thunkAPI)
       }
     } catch (e) {
+      thunkAPI.dispatch(reorderTaskAction({ sourceId: param.destinationId, destinationId: param.sourceId, todolistId: param.todolistId }))
       const error = e as AxiosError
       return handleAsyncServerNetworkError(error, thunkAPI)
     }
@@ -113,7 +115,12 @@ export const asyncActions = {
 export const slice = createSlice({
   name: 'tasks',
   initialState,
-  reducers: {},
+  reducers: {
+    reorderTaskAction(state, action: PayloadAction<{ sourceId: number; destinationId: number; todolistId: string }>) {
+      const [task] = state[action.payload.todolistId].splice(action.payload.sourceId, 1)
+      state[action.payload.todolistId].splice(action.payload.destinationId, 0, task)
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(asyncTodolistsActions.addTodolist.fulfilled, (state, action) => {
@@ -150,12 +157,10 @@ export const slice = createSlice({
       .addCase(clearTasksAndTodolists, () => {
         return {}
       })
-      .addCase(reorderTask.fulfilled, (state, action) => {
-        const [task] = state[action.payload.todolistId].splice(action.payload.sourceId, 1)
-        state[action.payload.todolistId].splice(action.payload.destinationId, 0, task)
-      })
   },
 })
+
+export const { reorderTaskAction } = slice.actions
 
 // types
 export type UpdateDomainTaskModelType = {

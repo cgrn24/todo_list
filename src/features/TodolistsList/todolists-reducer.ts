@@ -74,15 +74,17 @@ const reorderTodolists = createAsyncThunk(
   async (param: { id: string; putAfterItemId: string | null; sourceId: number; destinationId: number }, thunkAPI) => {
     thunkAPI.dispatch(setAppStatus({ status: 'loading' }))
     try {
-      debugger
+      thunkAPI.dispatch(reorderTodolistAction({ sourceId: param.sourceId, destinationId: param.destinationId }))
       const res = await todolistsAPI.reorderTodolists(param.id, param.putAfterItemId)
       if (res.data.resultCode === ResultCode.Success) {
         thunkAPI.dispatch(setAppStatus({ status: 'succeeded' }))
-        return { sourceId: param.sourceId, destinationId: param.destinationId }
+        return null
       } else {
+        thunkAPI.dispatch(reorderTodolistAction({ sourceId: param.destinationId, destinationId: param.sourceId }))
         return handleAsyncServerAppError(res.data, thunkAPI)
       }
     } catch (e) {
+      thunkAPI.dispatch(reorderTodolistAction({ sourceId: param.destinationId, destinationId: param.sourceId }))
       const error = e as AxiosError
       return handleAsyncServerNetworkError(error, thunkAPI)
     }
@@ -109,6 +111,10 @@ export const slice = createSlice({
       const index = state.findIndex((tl) => tl.id === action.payload.id)
       state[index].entityStatus = action.payload.status
     },
+    reorderTodolistAction(state, action: PayloadAction<{ sourceId: number; destinationId: number }>) {
+      const [todo] = state.splice(action.payload.sourceId, 1)
+      state.splice(action.payload.destinationId, 0, todo)
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -131,14 +137,10 @@ export const slice = createSlice({
       .addCase(clearTasksAndTodolists, () => {
         return []
       })
-      .addCase(reorderTodolists.fulfilled, (state, action) => {
-        const [todo] = state.splice(action.payload.sourceId, 1)
-        state.splice(action.payload.destinationId, 0, todo)
-      })
   },
 })
 
-export const { changeTodolistFilter, changeTodolistEntityStatus } = slice.actions
+export const { changeTodolistFilter, changeTodolistEntityStatus, reorderTodolistAction } = slice.actions
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
 export type TodolistDomainType = TodolistType & {
