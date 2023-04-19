@@ -86,9 +86,9 @@ export const updateTask = createAsyncThunk(
 )
 export const reorderTask = createAsyncThunk(
   'tasks/reorderTask',
-  async (param: { taskId: string; putAfterId: string | null; sourceId: number; destinationId: number; todolistId: string }, thunkAPI) => {
+  async (param: { taskId: string; putAfterItemId: string | null; sourceId: number; destinationId: number; todolistId: string }, thunkAPI) => {
     debugger
-    const res = await todolistsAPI.reorderTask(param.todolistId, param.taskId, param.putAfterId)
+    const res = await todolistsAPI.reorderTask(param.todolistId, param.taskId, param.putAfterItemId)
     try {
       if (res.data.resultCode === ResultCode.Success) {
         return { sourceId: param.sourceId, destinationId: param.destinationId, todolistId: param.todolistId }

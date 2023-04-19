@@ -71,10 +71,11 @@ const changeTodolistTitle = createAsyncThunk('todolists/changeTodolistTitle', as
 })
 const reorderTodolists = createAsyncThunk(
   'todolists/reorderTodolists',
-  async (param: { id: string; putAfterId: string | null; sourceId: number; destinationId: number }, thunkAPI) => {
+  async (param: { id: string; putAfterItemId: string | null; sourceId: number; destinationId: number }, thunkAPI) => {
     thunkAPI.dispatch(setAppStatus({ status: 'loading' }))
     try {
-      const res = await todolistsAPI.reorderTodolists(param.id, param.putAfterId)
+      debugger
+      const res = await todolistsAPI.reorderTodolists(param.id, param.putAfterItemId)
       if (res.data.resultCode === ResultCode.Success) {
         thunkAPI.dispatch(setAppStatus({ status: 'succeeded' }))
         return { sourceId: param.sourceId, destinationId: param.destinationId }

@@ -17,16 +17,6 @@ export const TodolistsList = () => {
   const todolists = useSelector(selectTodos)
   const tasks = useSelector(selectTasks)
   const isLoggedIn = useSelector(selectIsLoggedIn)
-  const onDragEnd = (result: DropResult) => {
-    const { source, destination } = result
-    if (!destination) return
-    if (destination.droppableId === source.droppableId && destination.index === source.index) return
-    const sourceId = source.index
-    const destinationId = destination.index
-    const id = todolists[sourceId].id
-    const putAfterId = destinationId !== 0 ? todolists[destinationId - 1].id : todolists[0].id
-    reorderTodolists({ id, putAfterId, sourceId, destinationId })
-  }
 
   const scrollRef = useHorizontalScroll(3)
 
@@ -34,6 +24,16 @@ export const TodolistsList = () => {
 
   const { fetchTodolists, addTodolist, reorderTodolists } = useActions(todolistsActions)
 
+  const onDragEnd = (result: DropResult) => {
+    const { source, destination } = result
+    if (!destination) return
+    if (destination.droppableId === source.droppableId && destination.index === source.index) return
+    const sourceId = source.index
+    const destinationId = destination.index
+    const id = todolists[sourceId].id
+    const putAfterItemId = destinationId !== 0 ? todolists[destinationId - 1].id : ''
+    reorderTodolists({ id, putAfterItemId, sourceId, destinationId })
+  }
   const addTodolistCallback = useCallback(async (title: string, helper: AddItemFormSubmitHelperType) => {
     let thunk = addTodolist(title)
     const resultAction = await dispatch(thunk)

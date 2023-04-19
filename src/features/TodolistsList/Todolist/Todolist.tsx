@@ -30,9 +30,9 @@ export const Todolist = React.memo(function ({ ...props }: PropsType) {
     const sourceId = source.index
     const destinationId = destination.index
     const taskId = props.tasks[sourceId].id
-    const putAfterId = destinationId !== 0 ? props.tasks[destinationId - 1].id : props.tasks[0].id
+    const putAfterItemId = destinationId !== 0 ? props.tasks[destinationId - 1].id : ''
     const todolistId = props.todolist.id
-    reorderTask({ taskId, putAfterId, sourceId, destinationId, todolistId })
+    reorderTask({ taskId, putAfterItemId, sourceId, destinationId, todolistId })
   }
 
   useEffect(() => {

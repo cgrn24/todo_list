@@ -14,8 +14,8 @@ export const todolistsAPI = {
   updateTodolist(id: string, title: string) {
     return instance.put<ResponseType>(`todo-lists/${id}`, { title: title })
   },
-  reorderTodolists(id: string, putAfterId: string | null) {
-    return instance.put<ResponseType>(`todo-lists/${id}/reorder`, { putAfterId: putAfterId })
+  reorderTodolists(id: string, putAfterItemId: string | null) {
+    return instance.put<ResponseType>(`todo-lists/${id}/reorder`, { putAfterItemId: putAfterItemId })
   },
   getTasks(todolistId: string) {
     return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`)
@@ -29,7 +29,7 @@ export const todolistsAPI = {
   updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
     return instance.put<ResponseType<TaskType>>(`todo-lists/${todolistId}/tasks/${taskId}`, model)
   },
-  reorderTask(todolistId: string, taskId: string, putAfterId: string | null) {
-    return instance.put<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}/reorder`, { putAfterId: putAfterId })
+  reorderTask(todolistId: string, taskId: string, putAfterItemId: string | null) {
+    return instance.put<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}/reorder`, { putAfterItemId: putAfterItemId })
   },
 }
