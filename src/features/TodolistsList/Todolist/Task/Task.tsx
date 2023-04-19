@@ -6,6 +6,7 @@ import { TaskStatuses } from '../../../../common/enums/common-enums'
 import { useActions } from '../../../../common/hooks/useActions'
 import { Checkbox, IconButton } from '@mui/material'
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
+import style from './Task.module.css'
 
 type TaskPropsType = {
   task: TaskType
@@ -40,11 +41,11 @@ export const Task = React.memo((props: TaskPropsType) => {
   )
 
   return (
-    <div key={props.task.id} className={props.task.status === TaskStatuses.Completed ? 'is-done' : ''} style={{ position: 'relative' }}>
+    <div key={props.task.id} className={style.taskContainer}>
       <Checkbox checked={props.task.status === TaskStatuses.Completed} color='secondary' onChange={onChangeHandler} />
 
       <EditableSpan value={props.task.title} onChange={onTitleChangeHandler} />
-      <IconButton size={'small'} onClick={onClickHandler} style={{ position: 'absolute', top: '2px', right: '5px' }}>
+      <IconButton size={'small'} onClick={onClickHandler}>
         <RemoveCircleIcon fontSize={'small'} />
       </IconButton>
     </div>

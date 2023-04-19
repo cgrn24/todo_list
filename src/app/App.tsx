@@ -61,10 +61,13 @@ const App = () => {
       <div className='App'>
         <ErrorSnackbar />
         <AppBar position='static'>
-          <Toolbar>
-            <IconButton size='large' edge='start' color='inherit' sx={{ mr: 2 }}>
-              <Menu />
-            </IconButton>
+          <Toolbar
+            sx={{
+              width: '100%',
+              maxWidth: 1300,
+              mx: 'auto',
+            }}
+          >
             <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
               Task manager
             </Typography>
