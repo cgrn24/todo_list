@@ -1,16 +1,17 @@
 import React, { ChangeEvent, useCallback } from 'react'
-import { EditableSpan } from '../../../../common/components/EditableSpan/EditableSpan'
-import { tasksActions } from '../../index'
-import { TaskType } from '../../../../common/types/types'
-import { TaskStatuses } from '../../../../common/enums/common-enums'
-import { useActions } from '../../../../common/hooks/useActions'
+import { EditableSpan } from 'common/components/EditableSpan/EditableSpan'
+import { TaskType } from 'common/types/types'
+import { TaskStatuses } from 'common/enums/common-enums'
+import { useActions } from 'common/hooks/useActions'
 import { Checkbox, IconButton } from '@mui/material'
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
 import style from './Task.module.css'
+import { tasksActions } from 'features/TodolistsList'
 
 type TaskPropsType = {
   task: TaskType
   todolistId: string
+  isLoading: boolean
 }
 
 export const Task = React.memo((props: TaskPropsType) => {
@@ -42,10 +43,9 @@ export const Task = React.memo((props: TaskPropsType) => {
 
   return (
     <div key={props.task.id} className={style.taskContainer}>
-      <Checkbox checked={props.task.status === TaskStatuses.Completed} color='secondary' onChange={onChangeHandler} />
-
+      <Checkbox checked={props.task.status === TaskStatuses.Completed} color='secondary' onChange={onChangeHandler} disabled={props.isLoading} />
       <EditableSpan value={props.task.title} onChange={onTitleChangeHandler} />
-      <IconButton size={'small'} onClick={onClickHandler}>
+      <IconButton size={'small'} onClick={onClickHandler} disabled={props.isLoading}>
         <RemoveCircleIcon fontSize={'small'} />
       </IconButton>
     </div>

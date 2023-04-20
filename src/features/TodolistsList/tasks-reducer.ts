@@ -1,10 +1,10 @@
 import { todolistsAPI } from './todolistsAPI'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { appActions } from '../../app/app-actions'
-import { handleAsyncServerAppError, handleAsyncServerNetworkError } from '../../common/utils/error-utils'
-import { asyncActions as asyncTodolistsActions } from './todolists-reducer'
-import { TaskType, ThunkError, UpdateTaskModelType } from '../../common/types/types'
-import { ResultCode, TaskPriorities, TaskStatuses } from '../../common/enums/common-enums'
+import { appActions } from 'app/app-actions'
+import { handleAsyncServerAppError, handleAsyncServerNetworkError } from 'common/utils/error-utils'
+import { asyncActions as asyncTodolistsActions, changeTodolistEntityStatus } from './todolists-reducer'
+import { TaskType, ThunkError, UpdateTaskModelType } from 'common/types/types'
+import { ResultCode, TaskPriorities, TaskStatuses } from 'common/enums/common-enums'
 import { clearTasksAndTodolists } from 'common/actions/common-actions'
 import { AppRootStateType } from 'app/store'
 import { AxiosError } from 'axios'
@@ -89,15 +89,19 @@ export const reorderTask = createAsyncThunk(
   async (param: { taskId: string; putAfterItemId: string | null; sourceId: number; destinationId: number; todolistId: string }, thunkAPI) => {
     try {
       thunkAPI.dispatch(reorderTaskAction({ sourceId: param.sourceId, destinationId: param.destinationId, todolistId: param.todolistId }))
+      thunkAPI.dispatch(changeTodolistEntityStatus({ id: param.todolistId, status: 'loading' }))
       const res = await todolistsAPI.reorderTask(param.todolistId, param.taskId, param.putAfterItemId)
       if (res.data.resultCode === ResultCode.Success) {
+        thunkAPI.dispatch(changeTodolistEntityStatus({ id: param.todolistId, status: 'idle' }))
         return null
       } else {
         thunkAPI.dispatch(reorderTaskAction({ sourceId: param.destinationId, destinationId: param.sourceId, todolistId: param.todolistId }))
+        thunkAPI.dispatch(changeTodolistEntityStatus({ id: param.todolistId, status: 'idle' }))
         return handleAsyncServerAppError(res.data, thunkAPI)
       }
     } catch (e) {
       thunkAPI.dispatch(reorderTaskAction({ sourceId: param.destinationId, destinationId: param.sourceId, todolistId: param.todolistId }))
+      thunkAPI.dispatch(changeTodolistEntityStatus({ id: param.todolistId, status: 'idle' }))
       const error = e as AxiosError
       return handleAsyncServerNetworkError(error, thunkAPI)
     }

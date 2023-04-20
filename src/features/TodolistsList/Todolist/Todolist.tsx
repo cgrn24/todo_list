@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect } from 'react'
-import { AddItemForm, AddItemFormSubmitHelperType } from '../../../common/components/AddItemForm/AddItemForm'
-import { EditableSpan } from '../../../common/components/EditableSpan/EditableSpan'
+import { AddItemForm, AddItemFormSubmitHelperType } from 'common/components/AddItemForm/AddItemForm'
+import { EditableSpan } from 'common/components/EditableSpan/EditableSpan'
 import { Task } from './Task/Task'
 import { FilterValuesType, TodolistDomainType } from '../todolists-reducer'
 import { tasksActions, todolistsActions } from '../index'
-import { TaskType } from '../../../common/types/types'
-import { TaskStatuses } from '../../../common/enums/common-enums'
-import { useActions } from '../../../common/hooks/useActions'
-import { useAppDispatch } from '../../../common/hooks/useAppDispatch'
+import { TaskType } from 'common/types/types'
+import { TaskStatuses } from 'common/enums/common-enums'
+import { useActions } from 'common/hooks/useActions'
+import { useAppDispatch } from 'common/hooks/useAppDispatch'
 import { Button, ButtonGroup, IconButton, Paper } from '@mui/material'
 import ClearIcon from '@mui/icons-material/Clear'
 import { DragDropContext, Draggable, DraggableProvidedDragHandleProps, Droppable, DropResult } from 'react-beautiful-dnd'
@@ -118,10 +118,10 @@ export const Todolist = React.memo(function ({ ...props }: PropsType) {
           {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
               {tasksForTodolist.map((t, index) => (
-                <Draggable key={t.id} draggableId={t.id} index={index}>
+                <Draggable key={t.id} draggableId={t.id} index={index} isDragDisabled={props.todolist.entityStatus === 'loading'}>
                   {(provided) => (
                     <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                      <Task key={t.id} task={t} todolistId={props.todolist.id} />
+                      <Task key={t.id} task={t} todolistId={props.todolist.id} isLoading={props.todolist.entityStatus === 'loading'} />
                     </div>
                   )}
                 </Draggable>

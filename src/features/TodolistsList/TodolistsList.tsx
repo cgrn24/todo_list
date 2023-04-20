@@ -1,17 +1,17 @@
-import React, { useCallback, useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { AddItemForm, AddItemFormSubmitHelperType } from '../../common/components/AddItemForm/AddItemForm'
+import { AddItemForm, AddItemFormSubmitHelperType } from 'common/components/AddItemForm/AddItemForm'
 import { Todolist } from './Todolist/Todolist'
-import { selectIsLoggedIn } from '../Auth/selectors'
 import { todolistsActions } from './index'
-import { useActions } from '../../common/hooks/useActions'
-import { useAppDispatch } from '../../common/hooks/useAppDispatch'
+import { useActions } from 'common/hooks/useActions'
+import { useAppDispatch } from 'common/hooks/useAppDispatch'
 import { Grid } from '@mui/material'
 import { Navigate } from 'react-router-dom'
 import { selectTasks, selectTodos } from './selectors'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 import { mergeRefs } from 'react-merge-refs'
 import { useHorizontalScroll } from 'common/hooks'
+import { selectIsLoggedIn } from 'features/Auth/selectors'
 
 export const TodolistsList = () => {
   const todolists = useSelector(selectTodos)
