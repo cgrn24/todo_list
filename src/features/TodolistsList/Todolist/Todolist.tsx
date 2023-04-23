@@ -11,6 +11,7 @@ import { useAppDispatch } from 'common/hooks/useAppDispatch'
 import { Button, ButtonGroup, IconButton, Paper } from '@mui/material'
 import ClearIcon from '@mui/icons-material/Clear'
 import { DragDropContext, Draggable, DraggableProvidedDragHandleProps, Droppable, DropResult } from 'react-beautiful-dnd'
+import style from 'Todolist.module.css'
 
 type PropsType = {
   todolist: TodolistDomainType
@@ -98,13 +99,8 @@ export const Todolist = React.memo(function ({ ...props }: PropsType) {
   }
 
   return (
-    <Paper style={{ padding: '10px', position: 'relative' }}>
-      <IconButton
-        size={'small'}
-        onClick={removeTodolistHandler}
-        disabled={props.todolist.entityStatus === 'loading'}
-        style={{ position: 'absolute', right: '5px', top: '5px' }}
-      >
+    <Paper className={style.paper}>
+      <IconButton size={'small'} onClick={removeTodolistHandler} disabled={props.todolist.entityStatus === 'loading'} className={style.deleteIcon}>
         <ClearIcon fontSize={'small'} />
       </IconButton>
       <div {...props.draggable}>
@@ -127,12 +123,12 @@ export const Todolist = React.memo(function ({ ...props }: PropsType) {
                 </Draggable>
               ))}
               {provided.placeholder}
-              {!tasksForTodolist.length && <div style={{ padding: '10px', color: 'grey' }}>No task</div>}
+              {!tasksForTodolist.length && <div className={style.noTask}>No task</div>}
             </div>
           )}
         </Droppable>
       </DragDropContext>
-      <div style={{ paddingTop: '10px' }}>
+      <div className={style.buttonGroup}>
         <ButtonGroup variant='contained' aria-label='outlined primary button group'>
           {renderFilterButton('all', 'All')}
           {renderFilterButton('active', 'Active')}

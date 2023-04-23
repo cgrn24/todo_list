@@ -1,0 +1,16 @@
+.paper {
+  padding: '10px';
+  position: 'relative';
+}
+.deleteIcon {
+  position: 'absolute';
+  right: '5px';
+  top: '5px';
+}
+.noTask {
+  padding: '10px';
+  color: 'grey';
+}
+.buttonGroup {
+  padding-top: '10px';
+}
