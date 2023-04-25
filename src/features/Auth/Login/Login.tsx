@@ -1,55 +1,53 @@
 import { FormikHelpers, useFormik } from 'formik'
 import { useSelector } from 'react-redux'
-import { login } from './auth-reducer'
-import { selectIsLoggedIn } from './selectors'
-import { authActions } from './index'
-import { useAppDispatch } from '../../common/hooks/useAppDispatch'
+import { selectIsLoggedIn } from '../auth-selectors'
 import { Navigate } from 'react-router-dom'
 import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField } from '@mui/material'
 import style from './Login.module.css'
+import { LoginParamsType, ResponseType } from 'common/types/types'
+import { useActions } from 'common/hooks'
+import { authThunks } from '../auth-reducer'
 
-type FormValuesType = {
-  email: string
-  password: string
-  rememberMe: boolean
-}
+type FormikErrorType = Partial<Omit<LoginParamsType, 'captcha'>>
 
 export const Login = () => {
-  const dispatch = useAppDispatch()
+  const { login } = useActions(authThunks)
 
   const isLoggedIn = useSelector(selectIsLoggedIn)
 
   const formik = useFormik({
     validate: (values) => {
+      const errors: FormikErrorType = {}
       if (!values.email) {
-        return {
-          email: 'Email is required',
-        }
+        errors.email = 'Email is required'
       } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        return {
-          email: 'Invalid email adress',
-        }
+        errors.email = 'Invalid email address'
       }
+
       if (!values.password) {
-        return {
-          password: 'Password is required',
-        }
+        errors.password = 'Required'
+      } else if (values.password.length < 3) {
+        errors.password = 'Must be 3 characters or more'
       }
+
+      return errors
     },
     initialValues: {
       email: 'free@samuraijs.com',
       password: 'free',
       rememberMe: false,
     },
-    onSubmit: async (values: FormValuesType, formikHelpers: FormikHelpers<FormValuesType>) => {
-      const resultAction = await dispatch(authActions.login(values))
-
-      if (login.rejected.match(resultAction)) {
-        if (resultAction.payload?.fieldsErrors?.length) {
-          const error = resultAction.payload?.fieldsErrors[0]
-          formikHelpers.setFieldError(error.field, error.error)
-        }
-      }
+    onSubmit: async (values: LoginParamsType, formikHelpers: FormikHelpers<LoginParamsType>) => {
+      login(values)
+        .unwrap()
+        .catch((reason: ResponseType) => {
+          const { fieldsErrors } = reason
+          if (fieldsErrors) {
+            fieldsErrors.forEach((fieldError) => {
+              formikHelpers.setFieldError(fieldError.field, fieldError.error)
+            })
+          }
+        })
     },
   })
 

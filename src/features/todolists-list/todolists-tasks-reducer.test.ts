@@ -1,6 +1,6 @@
-import { TodolistDomainType, slice } from './todolists-reducer'
-import { slice as tasksSlice, TasksStateType } from './tasks-reducer'
-import { todolistsActions } from './'
+import { TodolistDomainType, slice } from './todolists/todolists-reducer'
+import { slice as tasksSlice, TasksStateType } from './tasks/tasks-reducer'
+import { todolistsActions } from '.'
 import { TodolistType } from '../../common/types/types'
 
 const todolistsReducer = slice.reducer

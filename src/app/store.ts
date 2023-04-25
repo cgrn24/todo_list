@@ -1,9 +1,10 @@
-import thunkMiddleware from 'redux-thunk'
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
-import { combineReducers } from 'redux'
-import { tasksReducer, todolistsReducer } from 'features/TodolistsList'
-import { appReducer } from 'app'
-import { authReducer } from 'features/Auth'
+import { ThunkDispatch } from 'redux-thunk'
+import { configureStore } from '@reduxjs/toolkit'
+import { AnyAction, combineReducers } from 'redux'
+import { appReducer } from './app-reducer'
+import { authReducer } from 'features/auth/auth-reducer'
+import { tasksReducer } from 'features/todolists-list/tasks/tasks-reducer'
+import { todolistsReducer } from 'features/todolists-list/todolists/todolists-reducer'
 
 export const rootReducer = combineReducers({
   tasks: tasksReducer,
@@ -14,7 +15,6 @@ export const rootReducer = combineReducers({
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunkMiddleware),
 })
 
 if (process.env.NODE_ENV === 'development' && module.hot) {
@@ -22,9 +22,9 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
     store.replaceReducer(rootReducer)
   })
 }
-export type RootReducerType = typeof rootReducer
-export type AppRootStateType = ReturnType<RootReducerType>
-export type AppDispatchType = typeof store.dispatch
+export type AppRootStateType = ReturnType<typeof rootReducer>
+
+export type AppDispatch = ThunkDispatch<AppRootStateType, unknown, AnyAction>
 
 // @ts-ignore
 window.store = store

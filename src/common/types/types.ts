@@ -1,3 +1,4 @@
+import { UpdateDomainTaskModelType } from 'features/todolists-list/tasks/tasks-reducer'
 import { TaskStatuses, TaskPriorities } from '../enums/common-enums'
 
 export type LoginParamsType = {
@@ -6,7 +7,7 @@ export type LoginParamsType = {
   rememberMe: boolean
   captcha?: string
 }
-// types
+
 export type TodolistType = {
   id: string
   title: string
@@ -33,6 +34,22 @@ export type TaskType = {
   order: number
   addedDate: string
 }
+
+export type AddTaskArgType = {
+  title: string
+  todolistId: string
+}
+
+export type UpdateTaskArgType = {
+  taskId: string
+  domainModel: UpdateDomainTaskModelType
+  todolistId: string
+}
+
+export type RemoveTaskArgType = {
+  todolistId: string
+  taskId: string
+}
 export type UpdateTaskModelType = {
   title: string
   description: string
@@ -50,6 +67,13 @@ export type UserType = {
   id: string
   email: string
   login: string
+}
+
+export type ReorderTodolistType = {
+  id: string
+  putAfterItemId: string | null
+  sourceId: number
+  destinationId: number
 }
 
 export type ThunkError = { rejectValue: { errors: Array<string>; fieldsErrors?: Array<FieldErrorType> } }

@@ -1,23 +1,22 @@
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import './App.css'
-import { TodolistsList } from '../features/TodolistsList'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
-import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
 import LinearProgress from '@mui/material/LinearProgress'
-import { Menu } from '@mui/icons-material'
 import { ErrorSnackbar } from '../common/components/ErrorSnackbar/ErrorSnackbar'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { CircularProgress, createTheme, ThemeProvider } from '@mui/material'
 import { useSelector } from 'react-redux'
-import { selectIsInitialized, selectStatus } from './selectors'
-import { authActions, authSelectors, Login } from '../features/Auth'
+import { selectAppStatus, selectIsInitialized } from './app-selectors'
 import { useActions } from '../common/hooks/useActions'
-import { appActions } from '.'
 import { NotFound } from 'common/components/NotFound/NotFound'
+import { authThunks } from 'features/auth/auth-reducer'
+import { selectIsLoggedIn } from 'features/auth/auth-selectors'
+import { Login } from 'features/auth/Login/Login'
+import { TodolistsList } from 'features/todolists-list/TodolistsList'
 
 export const theme = createTheme({
   palette: {
@@ -31,22 +30,19 @@ export const theme = createTheme({
 })
 
 const App = () => {
-  const status = useSelector(selectStatus)
+  const status = useSelector(selectAppStatus)
   const isInitialized = useSelector(selectIsInitialized)
-  const isLoggedIn = useSelector(authSelectors.selectIsLoggedIn)
+  const isLoggedIn = useSelector(selectIsLoggedIn)
 
-  const { logout } = useActions(authActions)
-  const { initializeApp } = useActions(appActions)
+  const { logout, initializeApp } = useActions(authThunks)
 
   useEffect(() => {
     if (!isInitialized) {
-      initializeApp()
+      initializeApp(null)
     }
   }, [])
 
-  const logoutHandler = useCallback(() => {
-    logout()
-  }, [])
+  const logoutHandler = () => logout(null)
 
   if (!isInitialized) {
     return (

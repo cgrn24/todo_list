@@ -1,17 +1,17 @@
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { AddItemForm, AddItemFormSubmitHelperType } from 'common/components/AddItemForm/AddItemForm'
-import { Todolist } from './Todolist/Todolist'
-import { todolistsActions } from './index'
+import { AddItemForm } from 'common/components/AddItemForm/AddItemForm'
+import { Todolist } from './todolists/Todolist/Todolist'
 import { useActions } from 'common/hooks/useActions'
-import { useAppDispatch } from 'common/hooks/useAppDispatch'
 import { Grid } from '@mui/material'
 import { Navigate } from 'react-router-dom'
-import { selectTasks, selectTodos } from './selectors'
+import { selectTodos } from './todolists/todolists-selectors'
+import { selectTasks } from './tasks/tasks-selectors'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 import { mergeRefs } from 'react-merge-refs'
 import { useHorizontalScroll } from 'common/hooks'
-import { selectIsLoggedIn } from 'features/Auth/selectors'
+import { selectIsLoggedIn } from 'features/auth/auth-selectors'
+import { todolistsThunks } from './todolists/todolists-reducer'
 
 export const TodolistsList = () => {
   const todolists = useSelector(selectTodos)
@@ -20,9 +20,7 @@ export const TodolistsList = () => {
 
   const scrollRef = useHorizontalScroll(3)
 
-  const dispatch = useAppDispatch()
-
-  const { fetchTodolists, addTodolist, reorderTodolists } = useActions(todolistsActions)
+  const { fetchTodolists, addTodolist, reorderTodolists } = useActions(todolistsThunks)
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result
@@ -34,28 +32,16 @@ export const TodolistsList = () => {
     const putAfterItemId = destinationId !== 0 ? todolists[destinationId - 1].id : ''
     reorderTodolists({ id, putAfterItemId, sourceId, destinationId })
   }
-  const addTodolistCallback = useCallback(async (title: string, helper: AddItemFormSubmitHelperType) => {
-    let thunk = addTodolist(title)
-    const resultAction = await dispatch(thunk)
-
-    if (todolistsActions.addTodolist.rejected.match(resultAction)) {
-      if (resultAction.payload?.errors?.length) {
-        const errorMessage = resultAction.payload?.errors[0]
-        helper.setError(errorMessage)
-      } else {
-        helper.setError('Some error occured')
-      }
-    } else {
-      helper.setTitle('')
-    }
-  }, [])
+  const addTodolistCallback = (title: string) => {
+    return addTodolist(title).unwrap()
+  }
 
   useEffect(() => {
     if (!isLoggedIn) {
       return
     }
     if (!todolists.length) {
-      fetchTodolists()
+      fetchTodolists(null)
     }
   }, [])
 
