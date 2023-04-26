@@ -1,6 +1,6 @@
 import { FormikHelpers, useFormik } from 'formik'
 import { useSelector } from 'react-redux'
-import { selectIsLoggedIn } from '../auth-selectors'
+import { selectCaptcha, selectIsLoggedIn } from '../auth-selectors'
 import { Navigate } from 'react-router-dom'
 import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField } from '@mui/material'
 import style from './Login.module.css'
@@ -14,6 +14,9 @@ export const Login = () => {
   const { login } = useActions(authThunks)
 
   const isLoggedIn = useSelector(selectIsLoggedIn)
+
+  const captcha = useSelector(selectCaptcha)
+  console.log(captcha)
 
   const formik = useFormik({
     validate: (values) => {
@@ -88,6 +91,17 @@ export const Login = () => {
                 {...formik.getFieldProps('password')}
               />
               <FormControlLabel label={'Remember me'} control={<Checkbox {...formik.getFieldProps('rememberMe')} checked={formik.values.rememberMe} />} />
+              {captcha && <img src={captcha} />}
+              {captcha && (
+                <TextField
+                  type='captcha'
+                  label='Captcha'
+                  margin='normal'
+                  helperText={formik.touched.captcha && formik.errors.captcha}
+                  error={formik.touched.captcha && !!formik.errors.captcha}
+                  {...formik.getFieldProps('captcha')}
+                />
+              )}
               <Button type={'submit'} variant={'contained'} color={'primary'}>
                 Login
               </Button>

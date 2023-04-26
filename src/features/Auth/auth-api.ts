@@ -14,4 +14,8 @@ export const authAPI = {
     const promise = instance.get<ResponseType<{ id: number; email: string; login: string }>>('auth/me')
     return promise
   },
+  captcha() {
+    const promise = instance.get<{ url: string }>('security/get-captcha-url')
+    return promise
+  },
 }

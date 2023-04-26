@@ -1,15 +1,29 @@
 import { authAPI } from './auth-api'
-import { createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { LoginParamsType } from '../../common/types/types'
 import { clearTasksAndTodolists } from 'common/actions/common-actions'
 import { ResultCode } from 'common/enums/common-enums'
 import { createAppAsyncThunk } from 'common/utils/create-app-acyns-thunk'
 import { appActions } from 'app/app-reducer'
 
-const login = createAppAsyncThunk<{ isLoggedIn: boolean }, LoginParamsType>('auth/login', async (arg, { rejectWithValue }) => {
+type AuthStateType = {
+  isLoggedIn: boolean
+  captcha: string | null
+}
+
+const initialState: AuthStateType = {
+  isLoggedIn: false,
+  captcha: null,
+}
+
+const login = createAppAsyncThunk<{ isLoggedIn: boolean }, LoginParamsType>('auth/login', async (arg, { dispatch, rejectWithValue }) => {
   const res = await authAPI.login(arg)
   if (res.data.resultCode === ResultCode.Success) {
     return { isLoggedIn: true }
+  }
+  if (res.data.resultCode === ResultCode.Captcha) {
+    dispatch(getCaptcha())
+    return rejectWithValue({ data: res.data, showGlobalError: false })
   } else {
     const isShowAppError = !res.data.fieldsErrors?.length
     return rejectWithValue({ data: res.data, showGlobalError: isShowAppError })
@@ -26,8 +40,7 @@ const logout = createAppAsyncThunk<{ isLoggedIn: boolean }, void>('auth/logout',
   }
 })
 
-const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }, void>('app/initializeApp', async (_, thunkAPI) => {
-  const { dispatch, rejectWithValue } = thunkAPI
+const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }, void>('app/initializeApp', async (_, { dispatch, rejectWithValue }) => {
   try {
     const res = await authAPI.me()
     if (res.data.resultCode === ResultCode.Success) {
@@ -40,12 +53,19 @@ const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }, void>('app/in
   }
 })
 
+const getCaptcha = createAppAsyncThunk('auth/getCaptcha', async (_, { dispatch, rejectWithValue }) => {
+  const res = await authAPI.captcha()
+  dispatch(authActions.setCaptcha({ captcha: res.data.url }))
+})
+
 const slice = createSlice({
   name: 'auth',
-  initialState: {
-    isLoggedIn: false,
+  initialState,
+  reducers: {
+    setCaptcha: (state, action: PayloadAction<{ captcha: string }>) => {
+      state.captcha = action.payload.captcha
+    },
   },
-  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(login.fulfilled, (state, action) => {
@@ -61,4 +81,5 @@ const slice = createSlice({
 })
 
 export const authReducer = slice.reducer
-export const authThunks = { login, logout, initializeApp }
+export const authActions = slice.actions
+export const authThunks = { login, logout, initializeApp, getCaptcha }

@@ -38,7 +38,6 @@ const slice = createSlice({
           return action.type.endsWith('/rejected')
         },
         (state, action) => {
-          debugger
           const { payload, error } = action
           if (payload) {
             if (payload.showGlobalError) {
