@@ -78,32 +78,12 @@ const reorderTodolists = createAppAsyncThunk<ReorderTodolistType, ReorderTodolis
       return rejectWithValue({ data: res.data, showGlobalError: true })
     }
   } catch (e) {
-    // debugger
     const error = e as AxiosError
     dispatch(todolistsActions.changeTodolistEntityStatus({ id: arg.id, entityStatus: 'failed' }))
     dispatch(todolistsActions.reorderTodolistAction({ sourceId: arg.destinationId, destinationId: arg.sourceId }))
     return rejectWithValue({ error: error.message, showGlobalError: true })
   }
 })
-// const reorderTodolists = createAsyncThunk(
-//   'todolists/reorderTodolists',
-//   async (param: { id: string; putAfterItemId: string | null; sourceId: number; destinationId: number }, thunkAPI) => {
-//     try {
-//       thunkAPI.dispatch(todolistsActions.reorderTodolistAction({ sourceId: param.sourceId, destinationId: param.destinationId }))
-//       const res = await todolistsAPI.reorderTodolists(param.id, param.putAfterItemId)
-//       if (res.data.resultCode === ResultCode.Success) {
-//         return null
-//       } else {
-//         thunkAPI.dispatch(todolistsActions.reorderTodolistAction({ sourceId: param.destinationId, destinationId: param.sourceId }))
-//         return null
-//       }
-//     } catch (e) {
-//       thunkAPI.dispatch(todolistsActions.reorderTodolistAction({ sourceId: param.destinationId, destinationId: param.sourceId }))
-//       const error = e as AxiosError
-//       return null
-//     }
-//   }
-// )
 
 const initialState: TodolistDomainType[] = []
 

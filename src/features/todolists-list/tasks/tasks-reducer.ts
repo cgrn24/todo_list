@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
-import { AddTaskArgType, RemoveTaskArgType, TaskType, UpdateTaskArgType, UpdateTaskModelType } from 'common/types/types'
+import { AddTaskArgType, RemoveTaskArgType, ReorderTaskType, TaskType, UpdateTaskArgType, UpdateTaskModelType } from 'common/types/types'
 import { ResultCode, TaskPriorities, TaskStatuses } from 'common/enums/common-enums'
 import { clearTasksAndTodolists } from 'common/actions/common-actions'
 import { tasksApi } from './tasks-api'
 import { todolistsActions, todolistsThunks } from '../todolists/todolists-reducer'
 import { createAppAsyncThunk } from 'common/utils/create-app-acyns-thunk'
 import { appActions } from 'app/app-reducer'
+import { AxiosError } from 'axios'
 
 const initialState: TasksStateType = {}
 
@@ -59,21 +59,26 @@ const updateTask = createAppAsyncThunk<UpdateTaskArgType, UpdateTaskArgType>('ta
     return rejectWithValue({ data: res.data, showGlobalError: true })
   }
 })
-export const reorderTask = createAppAsyncThunk(
-  'tasks/reorderTask',
-  async (param: { taskId: string; putAfterItemId: string | null; sourceId: number; destinationId: number; todolistId: string }, thunkAPI) => {
-    thunkAPI.dispatch(tasksActions.reorderTaskAction({ sourceId: param.sourceId, destinationId: param.destinationId, todolistId: param.todolistId }))
-    thunkAPI.dispatch(todolistsActions.changeTodolistEntityStatus({ id: param.todolistId, entityStatus: 'loading' }))
-    const res = await tasksApi.reorderTask(param.todolistId, param.taskId, param.putAfterItemId)
+export const reorderTask = createAppAsyncThunk<ReorderTaskType, ReorderTaskType>('tasks/reorderTask', async (arg, { rejectWithValue, dispatch }) => {
+  dispatch(todolistsActions.changeTodolistEntityStatus({ id: arg.todolistId, entityStatus: 'loading' }))
+  try {
+    dispatch(tasksActions.reorderTaskAction({ sourceId: arg.sourceId, destinationId: arg.destinationId, todolistId: arg.todolistId }))
+    const res = await tasksApi.reorderTask(arg.todolistId, arg.taskId, arg.putAfterItemId)
     if (res.data.resultCode === ResultCode.Success) {
-      thunkAPI.dispatch(todolistsActions.changeTodolistEntityStatus({ id: param.todolistId, entityStatus: 'idle' }))
-      return null
+      dispatch(todolistsActions.changeTodolistEntityStatus({ id: arg.todolistId, entityStatus: 'idle' }))
+      return arg
     } else {
-      thunkAPI.dispatch(tasksActions.reorderTaskAction({ sourceId: param.destinationId, destinationId: param.sourceId, todolistId: param.todolistId }))
-      thunkAPI.dispatch(todolistsActions.changeTodolistEntityStatus({ id: param.todolistId, entityStatus: 'idle' }))
+      dispatch(tasksActions.reorderTaskAction({ sourceId: arg.destinationId, destinationId: arg.sourceId, todolistId: arg.todolistId }))
+      dispatch(todolistsActions.changeTodolistEntityStatus({ id: arg.todolistId, entityStatus: 'idle' }))
+      return rejectWithValue({ data: res.data, showGlobalError: true })
     }
+  } catch (e) {
+    const error = e as AxiosError
+    dispatch(tasksActions.reorderTaskAction({ sourceId: arg.destinationId, destinationId: arg.sourceId, todolistId: arg.todolistId }))
+    dispatch(todolistsActions.changeTodolistEntityStatus({ id: arg.todolistId, entityStatus: 'idle' }))
+    return rejectWithValue({ error: error.message, showGlobalError: true })
   }
-)
+})
 
 export const slice = createSlice({
   name: 'tasks',

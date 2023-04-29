@@ -75,5 +75,12 @@ export type ReorderTodolistType = {
   sourceId: number
   destinationId: number
 }
+export type ReorderTaskType = {
+  taskId: string
+  putAfterItemId: string | null
+  sourceId: number
+  destinationId: number
+  todolistId: string
+}
 
 export type ThunkError = { rejectValue: { errors: Array<string>; fieldsErrors?: Array<FieldErrorType> } }
