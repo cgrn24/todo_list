@@ -1,10 +1,11 @@
 import { todolistsAPI, UpdateTodolistTitleArgType } from './todolists-api'
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ReorderTodolistType, TodolistType } from 'common/types/types'
 import { clearTasksAndTodolists } from 'common/actions/common-actions'
 import { ResultCode } from 'common/enums/common-enums'
 import { createAppAsyncThunk } from 'common/utils/create-app-acyns-thunk'
 import { RequestStatusType } from 'app/app-reducer'
+import { AxiosError } from 'axios'
 
 const fetchTodolists = createAppAsyncThunk<{ todolists: TodolistType[] }, void>('todo/fetchTodolists', async () => {
   const res = await todolistsAPI.getTodolists()
@@ -60,15 +61,49 @@ const reorderTodolists = createAppAsyncThunk<ReorderTodolistType, ReorderTodolis
       entityStatus: 'loading',
     })
   )
-  dispatch(todolistsActions.reorderTodolistAction({ sourceId: arg.sourceId, destinationId: arg.destinationId }))
-  const res = await todolistsAPI.reorderTodolists(arg.id, arg.putAfterItemId)
-  if (res.data.resultCode === ResultCode.Success) {
-    return arg
-  } else {
+  try {
+    dispatch(todolistsActions.reorderTodolistAction({ sourceId: arg.sourceId, destinationId: arg.destinationId }))
+    const res = await todolistsAPI.reorderTodolists(arg.id, arg.putAfterItemId)
+    if (res.data.resultCode === ResultCode.Success) {
+      dispatch(
+        todolistsActions.changeTodolistEntityStatus({
+          id: arg.id,
+          entityStatus: 'succeeded',
+        })
+      )
+      return arg
+    } else {
+      dispatch(todolistsActions.changeTodolistEntityStatus({ id: arg.id, entityStatus: 'failed' }))
+      dispatch(todolistsActions.reorderTodolistAction({ sourceId: arg.destinationId, destinationId: arg.sourceId }))
+      return rejectWithValue({ data: res.data, showGlobalError: true })
+    }
+  } catch (e) {
+    // debugger
+    const error = e as AxiosError
+    dispatch(todolistsActions.changeTodolistEntityStatus({ id: arg.id, entityStatus: 'failed' }))
     dispatch(todolistsActions.reorderTodolistAction({ sourceId: arg.destinationId, destinationId: arg.sourceId }))
-    return rejectWithValue({ data: res.data, showGlobalError: true })
+    return rejectWithValue({ error: error.message, showGlobalError: true })
   }
 })
+// const reorderTodolists = createAsyncThunk(
+//   'todolists/reorderTodolists',
+//   async (param: { id: string; putAfterItemId: string | null; sourceId: number; destinationId: number }, thunkAPI) => {
+//     try {
+//       thunkAPI.dispatch(todolistsActions.reorderTodolistAction({ sourceId: param.sourceId, destinationId: param.destinationId }))
+//       const res = await todolistsAPI.reorderTodolists(param.id, param.putAfterItemId)
+//       if (res.data.resultCode === ResultCode.Success) {
+//         return null
+//       } else {
+//         thunkAPI.dispatch(todolistsActions.reorderTodolistAction({ sourceId: param.destinationId, destinationId: param.sourceId }))
+//         return null
+//       }
+//     } catch (e) {
+//       thunkAPI.dispatch(todolistsActions.reorderTodolistAction({ sourceId: param.destinationId, destinationId: param.sourceId }))
+//       const error = e as AxiosError
+//       return null
+//     }
+//   }
+// )
 
 const initialState: TodolistDomainType[] = []
 

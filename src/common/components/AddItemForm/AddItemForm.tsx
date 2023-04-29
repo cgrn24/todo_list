@@ -1,16 +1,15 @@
-import React, { ChangeEvent, KeyboardEvent, useState } from 'react'
+import { ChangeEvent, FC, KeyboardEvent, memo, useState } from 'react'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import { RejectValueType } from 'common/utils/create-app-acyns-thunk'
 
-// export type AddItemFormSubmitHelperType = { setError: (error: string) => void; setTitle: (title: string) => void }
 type Props = {
   addItem: (title: string) => Promise<any>
   disabled?: boolean
 }
 
-export const AddItemForm = React.memo(function ({ addItem, disabled = false }: Props) {
+export const AddItemForm: FC<Props> = memo(({ addItem, disabled = false }) => {
   let [title, setTitle] = useState('')
   let [error, setError] = useState<string | null>(null)
 
@@ -23,7 +22,7 @@ export const AddItemForm = React.memo(function ({ addItem, disabled = false }: P
         .catch((err: RejectValueType) => {
           if (err.data) {
             const messages = err.data.messages
-            setError(messages.length ? messages[0] : 'Some error occurredddd dddddddd dddddd dgdffdg')
+            setError(messages.length ? messages[0] : 'Some error occurred')
           }
         })
     } else {

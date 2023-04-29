@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import './App.css'
+import style from './App.module.css'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
@@ -46,7 +46,7 @@ const App = () => {
 
   if (!isInitialized) {
     return (
-      <div style={{ position: 'fixed', top: '30%', textAlign: 'center', width: '100%' }}>
+      <div className={style.loader}>
         <CircularProgress />
       </div>
     )
@@ -75,7 +75,7 @@ const App = () => {
           </Toolbar>
           {status === 'loading' && <LinearProgress />}
         </AppBar>
-        <Container fixed maxWidth={false} style={{ maxWidth: '1305px' }}>
+        <Container fixed maxWidth={false} className={style.container}>
           <Routes>
             <Route path={'/'} element={<TodolistsList />} />
             <Route path={'/login'} element={<Login />} />

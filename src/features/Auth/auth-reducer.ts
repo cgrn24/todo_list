@@ -1,5 +1,5 @@
 import { authAPI } from './auth-api'
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { LoginParamsType } from '../../common/types/types'
 import { clearTasksAndTodolists } from 'common/actions/common-actions'
 import { ResultCode } from 'common/enums/common-enums'

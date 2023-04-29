@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback } from 'react'
+import React, { ChangeEvent, FC, memo, useCallback } from 'react'
 import { EditableSpan } from 'common/components/EditableSpan/EditableSpan'
 import { TaskType } from 'common/types/types'
 import { TaskStatuses } from 'common/enums/common-enums'
@@ -8,31 +8,31 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
 import style from './Task.module.css'
 import { tasksThunks } from 'features/todolists-list/tasks/tasks-reducer'
 
-type TaskPropsType = {
+type Props = {
   task: TaskType
   todolistId: string
   isLoading: boolean
 }
 
-export const Task = React.memo((props: TaskPropsType) => {
+export const Task: FC<Props> = memo(({ task, todolistId, isLoading }) => {
   const { updateTask, removeTask } = useActions(tasksThunks)
 
-  const onClickHandler = useCallback(() => removeTask({ taskId: props.task.id, todolistId: props.todolistId }), [props.task.id, props.todolistId])
+  const onClickHandler = useCallback(() => removeTask({ taskId: task.id, todolistId: todolistId }), [task.id, todolistId])
 
   const changeStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const status = e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New
-    updateTask({ taskId: props.task.id, domainModel: { status }, todolistId: props.todolistId })
+    updateTask({ taskId: task.id, domainModel: { status }, todolistId: todolistId })
   }
 
   const changeTitleHandler = (title: string) => {
-    updateTask({ taskId: props.task.id, domainModel: { title }, todolistId: props.todolistId })
+    updateTask({ taskId: task.id, domainModel: { title }, todolistId: todolistId })
   }
 
   return (
-    <div key={props.task.id} className={style.taskContainer}>
-      <Checkbox checked={props.task.status === TaskStatuses.Completed} color='secondary' onChange={changeStatusHandler} disabled={props.isLoading} />
-      <EditableSpan value={props.task.title} onChange={changeTitleHandler} />
-      <IconButton size={'small'} onClick={onClickHandler} disabled={props.isLoading}>
+    <div key={task.id} className={style.taskContainer}>
+      <Checkbox checked={task.status === TaskStatuses.Completed} color='secondary' onChange={changeStatusHandler} disabled={isLoading} />
+      <EditableSpan value={task.title} onChange={changeTitleHandler} />
+      <IconButton size={'small'} onClick={onClickHandler} disabled={isLoading}>
         <RemoveCircleIcon fontSize={'small'} />
       </IconButton>
     </div>

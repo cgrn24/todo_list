@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react'
+import { FC } from 'react'
 import { Button, ButtonGroup } from '@mui/material'
 import { useActions } from 'common/hooks'
 import { FilterValuesType, TodolistDomainType, todolistsActions } from '../../todolists-reducer'

@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { TaskStatuses } from 'common/enums'
 import { TodolistDomainType } from '../todolists-reducer'
 import { TaskType } from 'common/types/types'

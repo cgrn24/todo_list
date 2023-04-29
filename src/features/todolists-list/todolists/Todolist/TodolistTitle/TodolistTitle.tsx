@@ -1,8 +1,7 @@
 import { FC } from 'react'
 import { useActions } from 'common/hooks'
-import { TodolistDomainType, todolistsThunks } from '../../todolists-reducer'
 import { EditableSpan } from 'common/components/EditableSpan/EditableSpan'
-import style from './TodolistTitle.module.css'
+import { TodolistDomainType, todolistsThunks } from '../../todolists-reducer'
 
 type Props = {
   todolist: TodolistDomainType

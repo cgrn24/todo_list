@@ -12,6 +12,7 @@ import { mergeRefs } from 'react-merge-refs'
 import { useHorizontalScroll } from 'common/hooks'
 import { selectIsLoggedIn } from 'features/auth/auth-selectors'
 import { todolistsThunks } from './todolists/todolists-reducer'
+import style from './TodolistsList.module.css'
 
 export const TodolistsList = () => {
   const todolists = useSelector(selectTodos)
@@ -51,7 +52,7 @@ export const TodolistsList = () => {
 
   return (
     <>
-      <Grid container style={{ padding: '20px' }}>
+      <Grid container className={style.addContainer}>
         <AddItemForm addItem={addTodolistCallback} />
       </Grid>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -60,9 +61,10 @@ export const TodolistsList = () => {
             <Grid
               container
               spacing={3}
-              style={{ flexWrap: 'nowrap', overflowX: 'scroll' }}
+              className={style.todosContainer}
               {...provided.droppableProps}
               ref={mergeRefs([provided.innerRef, scrollRef])}
+              sx={{ flexWrap: 'nowrap' }}
             >
               {todolists.map((tl, index) => {
                 let allTodolistTasks = tasks[tl.id]
@@ -71,7 +73,7 @@ export const TodolistsList = () => {
                   <Draggable key={tl.id} draggableId={tl.id} index={index}>
                     {(provided) => (
                       <Grid item ref={provided.innerRef} {...provided.draggableProps}>
-                        <div style={{ width: '290px' }}>
+                        <div className={style.todoContainer}>
                           <Todolist todolist={tl} tasks={allTodolistTasks} draggable={provided.dragHandleProps} />
                         </div>
                       </Grid>

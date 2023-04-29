@@ -1,15 +1,11 @@
-import React, { FC, memo, useCallback, useEffect } from 'react'
+import { FC, memo, useEffect } from 'react'
 import { AddItemForm } from 'common/components/AddItemForm/AddItemForm'
-import { EditableSpan } from 'common/components/EditableSpan/EditableSpan'
-import { Task } from '../Tasks/Task/Task'
-import { FilterValuesType, TodolistDomainType, todolistsThunks } from '../todolists-reducer'
+import { TodolistDomainType, todolistsThunks } from '../todolists-reducer'
 import { TaskType } from 'common/types/types'
-import { TaskStatuses } from 'common/enums/common-enums'
 import { useActions } from 'common/hooks/useActions'
-import { useAppDispatch } from 'common/hooks/useAppDispatch'
-import { Button, ButtonGroup, IconButton, Paper } from '@mui/material'
+import { IconButton, Paper } from '@mui/material'
 import ClearIcon from '@mui/icons-material/Clear'
-import { DragDropContext, Draggable, DraggableProvidedDragHandleProps, Droppable, DropResult } from 'react-beautiful-dnd'
+import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd'
 import style from './Todolist.module.css'
 import { tasksThunks } from 'features/todolists-list/tasks/tasks-reducer'
 import { TodolistTitle } from './TodolistTitle/TodolistTitle'
@@ -47,7 +43,7 @@ export const Todolist: FC<Props> = memo(({ todolist, tasks, draggable }) => {
         onClick={removeTodolistHandler}
         disabled={todolist.entityStatus === 'loading'}
         className={style.deleteIcon}
-        style={{ position: 'absolute' }}
+        sx={{ position: 'absolute' }}
       >
         <ClearIcon fontSize={'small'} />
       </IconButton>

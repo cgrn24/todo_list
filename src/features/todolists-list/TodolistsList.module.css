@@ -1,0 +1,10 @@
+.addContainer {
+  padding: 20px;
+}
+.todosContainer {
+  flex-wrap: nowrap;
+  overflow-x: scroll;
+}
+.todoContainer {
+  width: 290px;
+}

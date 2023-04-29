@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 import { selectCaptcha, selectIsLoggedIn } from '../auth-selectors'
 import { Navigate } from 'react-router-dom'
 import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField } from '@mui/material'
-import style from './Login.module.css'
 import { LoginParamsType, ResponseType } from 'common/types/types'
 import { useActions } from 'common/hooks'
 import { authThunks } from '../auth-reducer'
@@ -16,7 +15,6 @@ export const Login = () => {
   const isLoggedIn = useSelector(selectIsLoggedIn)
 
   const captcha = useSelector(selectCaptcha)
-  console.log(captcha)
 
   const formik = useFormik({
     validate: (values) => {

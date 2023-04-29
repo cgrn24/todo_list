@@ -1,10 +1,10 @@
-import { slice, TasksStateType, asyncActions } from './tasks-reducer'
-import { asyncActions as todolistsAsyncActions } from '../todolists/todolists-reducer'
+import { slice, TasksStateType, tasksThunks } from './tasks-reducer'
 import { TaskPriorities, TaskStatuses } from '../../../common/enums/common-enums'
+import { todolistsThunks } from '../todolists/todolists-reducer'
 
 const { reducer: tasksReducer } = slice
-const { addTodolist, fetchTodolists, removeTodolist } = todolistsAsyncActions
-const { removeTask, addTask, updateTask, fetchTasks } = asyncActions
+const { addTodolist, fetchTodolists, removeTodolist } = todolistsThunks
+const { removeTask, addTask, updateTask, fetchTasks } = tasksThunks
 
 let startState: TasksStateType = {}
 beforeEach(() => {
@@ -112,7 +112,7 @@ test('correct task should be added to correct array', () => {
     startDate: '',
     id: 'id exists',
   }
-  const action = addTask.fulfilled(task, 'requestId', { title: task.title, todolistId: task.todoListId })
+  const action = addTask.fulfilled({ task }, 'requestId', { title: task.title, todolistId: task.todoListId })
 
   const endState = tasksReducer(startState, action)
 
@@ -123,7 +123,7 @@ test('correct task should be added to correct array', () => {
   expect(endState['todolistId2'][0].status).toBe(TaskStatuses.New)
 })
 test('status of specified task should be changed', () => {
-  let updateModel = { taskId: '2', model: { status: TaskStatuses.New }, todolistId: 'todolistId2' }
+  let updateModel = { taskId: '2', domainModel: { status: TaskStatuses.New }, todolistId: 'todolistId2' }
   const action = updateTask.fulfilled(updateModel, 'requestId', updateModel)
 
   const endState = tasksReducer(startState, action)
@@ -132,7 +132,7 @@ test('status of specified task should be changed', () => {
   expect(endState['todolistId2'][1].status).toBe(TaskStatuses.New)
 })
 test('title of specified task should be changed', () => {
-  let updateModel = { taskId: '2', model: { title: 'yogurt' }, todolistId: 'todolistId2' }
+  let updateModel = { taskId: '2', domainModel: { title: 'yogurt' }, todolistId: 'todolistId2' }
   const action = updateTask.fulfilled(updateModel, 'requestId', updateModel)
 
   const endState = tasksReducer(startState, action)
