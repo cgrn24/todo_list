@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, memo, useCallback } from 'react'
+import { ChangeEvent, FC, memo } from 'react'
 import { EditableSpan } from 'common/components/EditableSpan/EditableSpan'
 import { TaskType } from 'common/types/types'
 import { TaskStatuses } from 'common/enums/common-enums'
@@ -17,7 +17,7 @@ type Props = {
 export const Task: FC<Props> = memo(({ task, todolistId, isLoading }) => {
   const { updateTask, removeTask } = useActions(tasksThunks)
 
-  const onClickHandler = useCallback(() => removeTask({ taskId: task.id, todolistId: todolistId }), [task.id, todolistId])
+  const removeTaskHandler = () => removeTask({ taskId: task.id, todolistId: todolistId })
 
   const changeStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const status = e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New
@@ -32,7 +32,7 @@ export const Task: FC<Props> = memo(({ task, todolistId, isLoading }) => {
     <div key={task.id} className={style.taskContainer}>
       <Checkbox checked={task.status === TaskStatuses.Completed} color='secondary' onChange={changeStatusHandler} disabled={isLoading} />
       <EditableSpan value={task.title} onChange={changeTitleHandler} />
-      <IconButton size={'small'} onClick={onClickHandler} disabled={isLoading}>
+      <IconButton size={'small'} onClick={removeTaskHandler} disabled={isLoading}>
         <RemoveCircleIcon fontSize={'small'} />
       </IconButton>
     </div>
