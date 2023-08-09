@@ -18,13 +18,13 @@ export const FilterTasksButtons: FC<Props> = ({ todolist }) => {
   return (
     <div className={style.buttonGroup}>
       <ButtonGroup variant='contained' aria-label='outlined primary button group'>
-        <Button color={todolist.filter === 'active' ? 'secondary' : 'primary'} onClick={() => changeFilterHandler('all')}>
+        <Button color={todolist.filter === 'all' ? 'secondary' : 'primary'} onClick={() => changeFilterHandler('all')}>
           All
         </Button>
         <Button color={todolist.filter === 'active' ? 'secondary' : 'primary'} onClick={() => changeFilterHandler('active')}>
           Active
         </Button>
-        <Button color={todolist.filter === 'active' ? 'secondary' : 'primary'} onClick={() => changeFilterHandler('completed')}>
+        <Button color={todolist.filter === 'completed' ? 'secondary' : 'primary'} onClick={() => changeFilterHandler('completed')}>
           Completed
         </Button>
       </ButtonGroup>
